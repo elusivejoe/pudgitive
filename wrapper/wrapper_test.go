@@ -3,13 +3,13 @@ package wrapper
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/elusivejoe/pudgitive/database"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNavigation(t *testing.T) {
-	wrapper := NewWrapper(&database.DummyDatabase{})
+	wrapper := NewWrapper(database.NewDatabase())
 
 	_, err := wrapper.ls("/")
 	assert.Nil(t, err)
@@ -25,7 +25,7 @@ func TestNavigation(t *testing.T) {
 }
 
 func TestAlteration(t *testing.T) {
-	wrapper := NewWrapper(&database.DummyDatabase{})
+	wrapper := NewWrapper(database.NewDatabase())
 
 	exists, err := wrapper.exists("test")
 	assert.Nil(t, err)

@@ -12,7 +12,7 @@ func (w *Wrapper) ls(path string) ([]tree.Node, error) {
 }
 
 func (w *Wrapper) cd(path string) error {
-	fmt.Printf("cd: %s", path)
+	fmt.Printf("cd: %s\n", path)
 	return nil
 }
 

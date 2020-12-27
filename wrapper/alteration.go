@@ -7,12 +7,12 @@ import (
 )
 
 func (w *Wrapper) mkDir(path string, parents bool) (tree.Node, error) {
-	fmt.Printf("mkDir: %s %t", path, parents)
+	fmt.Printf("mkDir: %s %t\n", path, parents)
 	return tree.NewNode(path, true), nil
 }
 
 func (w *Wrapper) mkFile(path string) (tree.Node, error) {
-	fmt.Printf("mkFile: %s", path)
+	fmt.Printf("mkFile: %s\n", path)
 	return tree.NewNode(path, false), nil
 }
 

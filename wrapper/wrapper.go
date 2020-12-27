@@ -1,13 +1,13 @@
 package wrapper
 
 import (
-	"github.com/elusivejoe/pudgitive/database"
+	"github.com/recoilme/pudge"
 )
 
 type Wrapper struct {
-	db *database.DummyDatabase
+	db *pudge.Db
 }
 
-func NewWrapper(db *database.DummyDatabase) *Wrapper {
+func NewWrapper(db *pudge.Db) *Wrapper {
 	return &Wrapper{db: db}
 }
