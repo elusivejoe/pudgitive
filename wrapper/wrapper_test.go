@@ -1,6 +1,7 @@
 package wrapper
 
 import (
+	"path"
 	"testing"
 
 	"github.com/elusivejoe/pudgitive/database"
@@ -8,83 +9,69 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNavigation(t *testing.T) {
-	wrapper := NewWrapper(database.NewDatabase("../tmp/testdb"))
+func getWrapper(t *testing.T) *Wrapper {
+	database := database.NewDatabase(path.Join(t.TempDir(), "testdb"))
 
-	_, err := wrapper.Ls("/")
-	assert.Nil(t, err)
+	t.Cleanup(func() {
+		database.Close()
+	})
 
-	_, err = wrapper.Exists("test")
-	assert.Nil(t, err)
-
-	_, err = wrapper.IsDir("test")
-	assert.Nil(t, err)
-
-	err = wrapper.Cd("test")
-	assert.Nil(t, err)
+	return NewWrapper(database)
 }
 
-func TestAlteration(t *testing.T) {
-	wrapper := NewWrapper(database.NewDatabase("../tmp/testdb"))
+func TestAdmin(t *testing.T) {
+	wrapper := getWrapper(t)
 
-	exists, err := wrapper.Exists("test")
+	err := wrapper.InitRoot("")
+	assert.EqualError(t, err, "root name cannot be empty")
+
+	rootName := "Awesome File System!"
+
+	err = wrapper.InitRoot(rootName)
 	assert.Nil(t, err)
-	assert.False(t, exists)
+	assert.Equal(t, wrapper.CurrentRoot(), "")
 
-	wrapper.MkDir("test", false)
-
-	exists, err = wrapper.Exists("test")
+	err = wrapper.InitRoot("Another Root")
 	assert.Nil(t, err)
-	assert.True(t, exists)
+	assert.Equal(t, wrapper.CurrentRoot(), "")
 
-	err = wrapper.Cd("test")
+	err = wrapper.InitRoot(rootName)
+
+	assert.EqualError(t, err, "wrapper: root 'Awesome File System!' already exists")
+
+	err = wrapper.OpenRoot(rootName)
 	assert.Nil(t, err)
+	assert.Equal(t, wrapper.CurrentRoot(), rootName)
 
-	err = wrapper.Mv("test", "test_1")
+	err = wrapper.DeleteRoot("Some Other Root")
+	assert.EqualError(t, err, "wrapper: unable to find root 'Some Other Root'")
+	assert.Equal(t, wrapper.CurrentRoot(), rootName)
+
+	err = wrapper.DeleteRoot("Another Root")
 	assert.Nil(t, err)
+	assert.Equal(t, wrapper.CurrentRoot(), rootName)
 
-	exists, err = wrapper.Exists("test")
+	err = wrapper.DeleteRoot(rootName)
 	assert.Nil(t, err)
-	assert.False(t, exists)
+	assert.Equal(t, wrapper.CurrentRoot(), "")
+}
 
-	exists, err = wrapper.Exists("test_1")
+func TestMkDir(t *testing.T) {
+	wrapper := getWrapper(t)
+
+	assert.Nil(t, wrapper.InitRoot("test_mkdir"))
+	assert.Nil(t, wrapper.OpenRoot("test_mkdir"))
+
+	ok, err := wrapper.Exists("test dir")
 	assert.Nil(t, err)
-	assert.True(t, exists)
+	assert.False(t, ok)
 
-	err = wrapper.Cd("test_1")
+	meta, err := wrapper.MkDir("test dir", false)
 	assert.Nil(t, err)
+	assert.True(t, meta.Attributes().IsDir())
+	assert.Equal(t, meta.Name(), "test dir")
 
-	file, err := wrapper.MkFile("test_file.txt")
+	ok, err = wrapper.Exists("test dir")
 	assert.Nil(t, err)
-	assert.False(t, file.Attributes().IsDir())
-	assert.Equal(t, file.Name(), "test_file.txt")
-
-	err = wrapper.Mv("test_file.txt", "test.txt")
-	assert.Nil(t, err)
-
-	exists, err = wrapper.Exists("test.txt")
-	assert.Nil(t, err)
-	assert.True(t, exists)
-
-	file, err = wrapper.MkFile("test_1.txt")
-	assert.Nil(t, err)
-	assert.False(t, file.Attributes().IsDir())
-	assert.Equal(t, file.Name(), "test_1.txt")
-
-	err = wrapper.Cd("..")
-	assert.Nil(t, err)
-
-	exists, err = wrapper.Exists("test_1")
-	assert.Nil(t, err)
-	assert.True(t, exists)
-
-	err = wrapper.RmDir("test_1", false)
-	assert.NotNil(t, err)
-
-	err = wrapper.RmDir("test_1", true)
-	assert.Nil(t, err)
-
-	exists, err = wrapper.Exists("test_1")
-	assert.Nil(t, err)
-	assert.False(t, exists)
+	assert.True(t, ok)
 }

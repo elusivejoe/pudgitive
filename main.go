@@ -3,22 +3,17 @@ package main
 //TODO: main.go exists for development purposes; to be removed.
 
 import (
-	"fmt"
-	"log"
+	"os"
 
 	"github.com/elusivejoe/pudgitive/database"
+	"github.com/elusivejoe/pudgitive/wrapper"
 )
 
 func main() {
 	db := database.NewDatabase("tmp/testdb")
+	wrapper := wrapper.NewWrapper(db)
+	wrapper.InitRoot("test")
+	db.Close()
 
-	db.Set("test_key", []string{"test", "value", "one"})
-
-	var out []string
-
-	if err := db.Get("test_key", &out); err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	fmt.Printf("%v", out)
+	os.RemoveAll("tmp")
 }

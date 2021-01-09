@@ -5,7 +5,8 @@ import (
 )
 
 type Wrapper struct {
-	db *pudge.Db
+	db   *pudge.Db
+	root string
 }
 
 func NewWrapper(db *pudge.Db) *Wrapper {
