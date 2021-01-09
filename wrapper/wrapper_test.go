@@ -9,82 +9,82 @@ import (
 )
 
 func TestNavigation(t *testing.T) {
-	wrapper := NewWrapper(database.NewDatabase())
+	wrapper := NewWrapper(database.NewDatabase("../tmp/testdb"))
 
-	_, err := wrapper.ls("/")
+	_, err := wrapper.Ls("/")
 	assert.Nil(t, err)
 
-	_, err = wrapper.exists("test")
+	_, err = wrapper.Exists("test")
 	assert.Nil(t, err)
 
-	_, err = wrapper.isDir("test")
+	_, err = wrapper.IsDir("test")
 	assert.Nil(t, err)
 
-	err = wrapper.cd("test")
+	err = wrapper.Cd("test")
 	assert.Nil(t, err)
 }
 
 func TestAlteration(t *testing.T) {
-	wrapper := NewWrapper(database.NewDatabase())
+	wrapper := NewWrapper(database.NewDatabase("../tmp/testdb"))
 
-	exists, err := wrapper.exists("test")
+	exists, err := wrapper.Exists("test")
 	assert.Nil(t, err)
 	assert.False(t, exists)
 
-	wrapper.mkDir("test", false)
+	wrapper.MkDir("test", false)
 
-	exists, err = wrapper.exists("test")
+	exists, err = wrapper.Exists("test")
 	assert.Nil(t, err)
 	assert.True(t, exists)
 
-	err = wrapper.cd("test")
+	err = wrapper.Cd("test")
 	assert.Nil(t, err)
 
-	err = wrapper.mv("test", "test_1")
+	err = wrapper.Mv("test", "test_1")
 	assert.Nil(t, err)
 
-	exists, err = wrapper.exists("test")
+	exists, err = wrapper.Exists("test")
 	assert.Nil(t, err)
 	assert.False(t, exists)
 
-	exists, err = wrapper.exists("test_1")
+	exists, err = wrapper.Exists("test_1")
 	assert.Nil(t, err)
 	assert.True(t, exists)
 
-	err = wrapper.cd("test_1")
+	err = wrapper.Cd("test_1")
 	assert.Nil(t, err)
 
-	file, err := wrapper.mkFile("test_file.txt")
+	file, err := wrapper.MkFile("test_file.txt")
 	assert.Nil(t, err)
-	assert.False(t, file.IsDir())
+	assert.False(t, file.Attributes().IsDir())
 	assert.Equal(t, file.Name(), "test_file.txt")
 
-	err = wrapper.mv("test_file.txt", "test.txt")
+	err = wrapper.Mv("test_file.txt", "test.txt")
 	assert.Nil(t, err)
 
-	exists, err = wrapper.exists("test.txt")
+	exists, err = wrapper.Exists("test.txt")
 	assert.Nil(t, err)
 	assert.True(t, exists)
 
-	file, err = wrapper.mkFile("test_1.txt")
+	file, err = wrapper.MkFile("test_1.txt")
 	assert.Nil(t, err)
-	assert.False(t, file.IsDir())
+	assert.False(t, file.Attributes().IsDir())
 	assert.Equal(t, file.Name(), "test_1.txt")
 
-	err = wrapper.cd("..")
+	err = wrapper.Cd("..")
 	assert.Nil(t, err)
 
-	exists, err = wrapper.exists("test_1")
+	exists, err = wrapper.Exists("test_1")
 	assert.Nil(t, err)
 	assert.True(t, exists)
 
-	err = wrapper.rmDir("test_1", false)
+	err = wrapper.RmDir("test_1", false)
 	assert.NotNil(t, err)
 
-	err = wrapper.rmDir("test_1", true)
+	err = wrapper.RmDir("test_1", true)
 	assert.Nil(t, err)
 
-	exists, err = wrapper.exists("test_1")
+	exists, err = wrapper.Exists("test_1")
 	assert.Nil(t, err)
 	assert.False(t, exists)
 }

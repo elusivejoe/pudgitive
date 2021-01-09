@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	db := database.NewDatabase()
+	db := database.NewDatabase("tmp/testdb")
 
 	db.Set("test_key", []string{"test", "value", "one"})
 

@@ -2,26 +2,24 @@ package wrapper
 
 import (
 	"fmt"
-
-	"github.com/elusivejoe/pudgitive/tree"
 )
 
-func (w *Wrapper) ls(path string) ([]tree.Node, error) {
-	fmt.Printf("ls: %s\n", path)
-	return []tree.Node{}, nil
+func (w *Wrapper) Ls(path string) ([]string, error) {
+	fmt.Printf("Ls: %s\n", path)
+	return []string{}, nil
 }
 
-func (w *Wrapper) cd(path string) error {
-	fmt.Printf("cd: %s\n", path)
+func (w *Wrapper) Cd(path string) error {
+	fmt.Printf("Cd: %s\n", path)
 	return nil
 }
 
-func (w *Wrapper) exists(path string) (bool, error) {
-	fmt.Printf("exists: %s\n", path)
+func (w *Wrapper) Exists(path string) (bool, error) {
+	fmt.Printf("Exists: %s\n", path)
 	return false, nil
 }
 
-func (w *Wrapper) isDir(path string) (bool, error) {
-	fmt.Printf("isDir: %s\n", path)
+func (w *Wrapper) IsDir(path string) (bool, error) {
+	fmt.Printf("IsDir: %s\n", path)
 	return false, nil
 }
