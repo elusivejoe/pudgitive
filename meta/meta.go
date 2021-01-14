@@ -1,21 +1,21 @@
 package meta
 
 type Meta struct {
-	name  string
-	attrs Attributes
+	Name  string
+	Attrs Attributes
 }
 
 func NewMeta(name string, isDir bool) Meta {
 	return Meta{
-		name:  name,
-		attrs: Attributes{isDir: isDir},
+		Name:  name,
+		Attrs: Attributes{IsDir: isDir},
 	}
 }
 
-func (e *Meta) Name() string {
-	return e.name
+func (e *Meta) EntityName() string {
+	return e.Name
 }
 
 func (e *Meta) Attributes() *Attributes {
-	return &e.attrs
+	return &e.Attrs
 }

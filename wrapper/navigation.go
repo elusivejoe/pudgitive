@@ -2,6 +2,7 @@ package wrapper
 
 import (
 	"fmt"
+	"strings"
 )
 
 func (w *Wrapper) Ls(path string) ([]string, error) {
@@ -15,8 +16,27 @@ func (w *Wrapper) Cd(path string) error {
 }
 
 func (w *Wrapper) Exists(path string) (bool, error) {
-	fmt.Printf("Exists: %s\n", path)
-	return false, nil
+	endpoint := w.root
+
+	if relative := !strings.HasPrefix(path, "/"); relative {
+		if len(w.curPosRel) > 0 {
+			endpoint += "/" + w.curPosRel
+		}
+	}
+
+	if lastSlashIdx := strings.LastIndex(path, "/"); lastSlashIdx != -1 {
+		endpoint += "/" + path[:lastSlashIdx]
+	} else {
+		endpoint += "/" + path
+	}
+
+	ok, err := w.db.Has(endpoint)
+
+	if err != nil {
+		return false, err
+	}
+
+	return ok, nil
 }
 
 func (w *Wrapper) IsDir(path string) (bool, error) {

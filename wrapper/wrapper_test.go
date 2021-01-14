@@ -66,10 +66,10 @@ func TestMkDir(t *testing.T) {
 	assert.Nil(t, err)
 	assert.False(t, ok)
 
-	meta, err := wrapper.MkDir("test dir", false)
+	meta, err := wrapper.MkDir("test dir")
 	assert.Nil(t, err)
-	assert.True(t, meta.Attributes().IsDir())
-	assert.Equal(t, meta.Name(), "test dir")
+	assert.True(t, meta.Attributes().IsDirectory())
+	assert.Equal(t, meta.EntityName(), "test dir")
 
 	ok, err = wrapper.Exists("test dir")
 	assert.Nil(t, err)

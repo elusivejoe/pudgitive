@@ -1,9 +1,9 @@
 package meta
 
 type Attributes struct {
-	isDir bool
+	IsDir bool
 }
 
-func (a *Attributes) IsDir() bool {
-	return a.isDir
+func (a *Attributes) IsDirectory() bool {
+	return a.IsDir
 }

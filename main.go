@@ -5,8 +5,9 @@ package main
 import (
 	"os"
 
-	"github.com/elusivejoe/pudgitive/database"
 	"github.com/elusivejoe/pudgitive/wrapper"
+
+	"github.com/elusivejoe/pudgitive/database"
 )
 
 func main() {
