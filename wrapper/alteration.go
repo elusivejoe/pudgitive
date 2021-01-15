@@ -10,7 +10,7 @@ import (
 
 func (w *Wrapper) MkDir(path string) (meta.Meta, error) {
 	if len(path) == 0 {
-		return meta.Meta{}, errors.New("wrapper: empty path provided")
+		return meta.Meta{}, errors.New("empty path provided")
 	}
 
 	parts := strings.Split(path, "/")
@@ -22,7 +22,7 @@ func (w *Wrapper) MkDir(path string) (meta.Meta, error) {
 	}
 
 	if ok {
-		return meta.Meta{}, fmt.Errorf("wrapper: dir '%s' already exists", path)
+		return meta.Meta{}, fmt.Errorf("dir '%s' already exists", path)
 	}
 
 	currentPos := w.root
