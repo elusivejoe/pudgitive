@@ -1,44 +1,49 @@
 package wrapper
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
-func (w *Wrapper) MkDir(path string) (meta.Meta, error) {
-	if len(path) == 0 {
-		return meta.Meta{}, errors.New("empty path provided")
-	}
-
-	parts := strings.Split(path, "/")
-
-	ok, err := w.Exists(parts[0])
+func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
+	pathChecked, err := NewCheckedPath(path)
 
 	if err != nil {
-		return meta.Meta{}, err
-	}
-
-	if ok {
-		return meta.Meta{}, fmt.Errorf("dir '%s' already exists", path)
+		return nil, err
 	}
 
 	currentPos := w.root
 
-	if relative := !strings.HasPrefix(path, "/"); relative {
-		if len(w.curPosRel) > 0 {
-			currentPos += w.curPosRel
-		}
+	if !pathChecked.IsAbs() && len(w.curPosRel) > 0 {
+		currentPos += w.curPosRel
 	}
 
-	for _, part := range parts {
+	var descriptors []Descriptor
+
+	for _, part := range pathChecked.Parts() {
 		currentPos += "/" + part
-		w.db.Set(currentPos, meta.NewMeta(part, true))
+
+		exists, err := w.db.Has(currentPos)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if exists {
+			continue
+		}
+
+		meta := meta.NewMeta(part, true)
+
+		if err := w.db.Set(currentPos, meta); err != nil {
+			return nil, err
+		}
+
+		descriptors = append(descriptors, Descriptor{currentPos, meta})
 	}
 
-	return meta.NewMeta(parts[0], true), nil
+	return descriptors, nil
 }
 
 func (w *Wrapper) MkFile(path string) (meta.Meta, error) {
