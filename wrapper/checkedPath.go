@@ -7,7 +7,6 @@ import (
 
 type checkedPath struct {
 	isAbs      bool
-	original   string
 	normalized string
 	parts      []string
 }
@@ -24,16 +23,15 @@ func (p *checkedPath) Path() string {
 	return p.normalized
 }
 
-func NewCheckedPath(original string) (*checkedPath, error) {
-	normalized := normalize(original)
+func NewCheckedPath(path string) (*checkedPath, error) {
+	normalized := normalize(path)
 
 	if len(normalized) == 0 {
 		return nil, errors.New("empty path")
 	}
 
 	return &checkedPath{
-		isAbs:      strings.HasPrefix(original, "/"),
-		original:   original,
+		isAbs:      strings.HasPrefix(path, "/"),
 		normalized: normalized,
 		parts:      split(normalized),
 	}, nil

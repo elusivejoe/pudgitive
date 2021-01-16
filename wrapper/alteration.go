@@ -27,7 +27,7 @@ func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
 		exists, err := w.db.Has(currentPos)
 
 		if err != nil {
-			return nil, err
+			return descriptors, err
 		}
 
 		if exists {
