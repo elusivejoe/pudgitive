@@ -7,7 +7,7 @@ import (
 )
 
 func TestAdmin(t *testing.T) {
-	wrapper := getWrapper(t)
+	wrapper := createWrapper(t)
 
 	err := wrapper.InitRoot("")
 	assert.EqualError(t, err, "root name cannot be empty")

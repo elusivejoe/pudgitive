@@ -7,7 +7,7 @@ import (
 )
 
 func TestMkDirRel(t *testing.T) {
-	wrapper := getWrapper(t)
+	wrapper := createWrapper(t)
 
 	assert.Nil(t, wrapper.InitRoot("test_mkdir"))
 	assert.Nil(t, wrapper.OpenRoot("test_mkdir"))

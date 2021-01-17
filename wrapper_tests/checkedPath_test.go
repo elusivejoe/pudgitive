@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPath(t *testing.T) {
+func TestCheckedPath(t *testing.T) {
 	empty := ""
 	path, err := wrapper.NewCheckedPath(empty)
 	assert.Nil(t, path)

@@ -8,7 +8,7 @@ import (
 	"github.com/elusivejoe/pudgitive/wrapper"
 )
 
-func getWrapper(t *testing.T) *wrapper.Wrapper {
+func createWrapper(t *testing.T) *wrapper.Wrapper {
 	database := database.NewDatabase(path.Join(t.TempDir(), "testdb"))
 
 	t.Cleanup(func() {
