@@ -3,6 +3,8 @@ package wrapper
 import (
 	"errors"
 	"fmt"
+
+	"github.com/elusivejoe/pudgitive/meta"
 )
 
 func (w *Wrapper) CurrentRoot() string {
@@ -24,7 +26,7 @@ func (w *Wrapper) InitRoot(rootName string) error {
 		return fmt.Errorf("wrapper: root '%s' already exists", rootName)
 	}
 
-	w.db.Set(rootName, rootMeta{Name: rootName, Magic: "pudgitive"})
+	w.db.Set(rootName, meta.RootMeta{Name: rootName, Magic: "pudgitive"})
 
 	return nil
 }
@@ -40,7 +42,7 @@ func (w *Wrapper) verifyRoot(rootName string) error {
 		return fmt.Errorf("wrapper: unable to find root '%s'", rootName)
 	}
 
-	root := rootMeta{}
+	root := meta.RootMeta{}
 	w.db.Get(rootName, &root)
 
 	if root.Magic != "pudgitive" || root.Name != rootName {
