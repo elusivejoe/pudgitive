@@ -20,7 +20,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 		return nil, err
 	}
 
-	prefixedKeys, err := w.db.KeysByPrefix([]byte(endpoint), limit, offset, asc)
+	prefixedKeys, err := w.db.KeysByPrefix([]byte(endpoint), 0, 0, asc)
 
 	if err != nil {
 		return nil, err
@@ -28,6 +28,8 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 
 	var descriptors []Descriptor
 	metaInfo := &meta.Meta{}
+
+	currentOffset := 0
 
 	for _, prefix := range prefixedKeys {
 		subPath := trimPosition(w, string(prefix))
@@ -40,6 +42,11 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 			continue
 		}
 
+		if offset > 0 && currentOffset != offset {
+			currentOffset++
+			continue
+		}
+
 		key := endpoint + subPath
 
 		if err := w.db.Get(key, metaInfo); err != nil {
@@ -49,6 +56,10 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 		pathNorm := trimPosition(w, key)
 
 		descriptors = append(descriptors, Descriptor{Path: pathNorm, Meta: *metaInfo})
+
+		if limit > 0 && len(descriptors) == limit {
+			break
+		}
 	}
 
 	return descriptors, nil
