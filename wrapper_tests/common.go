@@ -4,8 +4,9 @@ import (
 	"path"
 	"testing"
 
-	"github.com/elusivejoe/pudgitive/database"
 	"github.com/elusivejoe/pudgitive/wrapper"
+
+	"github.com/elusivejoe/pudgitive/database"
 )
 
 func createWrapper(t *testing.T) *wrapper.Wrapper {

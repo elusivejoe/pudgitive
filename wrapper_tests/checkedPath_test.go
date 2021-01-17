@@ -14,11 +14,6 @@ func TestCheckedPath(t *testing.T) {
 	assert.Nil(t, path)
 	assert.EqualError(t, err, "empty path")
 
-	slashesOnly := "///////"
-	path, err = wrapper.NewCheckedPath(slashesOnly)
-	assert.Nil(t, path)
-	assert.EqualError(t, err, "empty path")
-
 	curious := "//////folder1/////folll\\der2////Spa   Ces//"
 	path, err = wrapper.NewCheckedPath(curious)
 	assert.Nil(t, err)
@@ -53,4 +48,20 @@ func TestCheckedPath(t *testing.T) {
 
 	assert.Equal(t, "folder1", path.Parts()[0])
 	assert.Equal(t, "folder2", path.Parts()[1])
+}
+
+func TestCheckedRootOnly(t *testing.T) {
+	path, err := wrapper.NewCheckedPath("///////")
+	assert.Nil(t, err)
+	assert.NotNil(t, path)
+	assert.True(t, path.IsAbs())
+	assert.Equal(t, "/", path.Path())
+	assert.Equal(t, 0, len(path.Parts()))
+
+	path, err = wrapper.NewCheckedPath("/")
+	assert.Nil(t, err)
+	assert.NotNil(t, path)
+	assert.True(t, path.IsAbs())
+	assert.Equal(t, "/", path.Path())
+	assert.Equal(t, 0, len(path.Parts()))
 }

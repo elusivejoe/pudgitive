@@ -38,6 +38,10 @@ func NewCheckedPath(path string) (*checkedPath, error) {
 }
 
 func split(path string) []string {
+	if path == "/" {
+		return nil
+	}
+
 	splits := strings.Split(path, "/")
 
 	if isAbs := strings.HasPrefix(path, "/"); isAbs {
@@ -48,8 +52,6 @@ func split(path string) []string {
 }
 
 func normalize(path string) string {
-	path = strings.TrimRight(path, "/")
-
 	var normalized strings.Builder
 	var unique rune = -1
 
@@ -62,5 +64,11 @@ func normalize(path string) string {
 		unique = current
 	}
 
-	return normalized.String()
+	path = normalized.String()
+
+	if len(path) > 1 {
+		path = strings.TrimRight(path, "/")
+	}
+
+	return path
 }
