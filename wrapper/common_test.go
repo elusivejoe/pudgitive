@@ -29,7 +29,7 @@ func TestEndpointAssembling(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, path.isAbs)
 
-	endpoint, err := wrapper.assembleEndpoint(path)
+	endpoint, err := assembleEndpoint(wrapper, path)
 	assert.Nil(t, err)
 	assert.Equal(t, "test_endpoint", endpoint)
 }
@@ -41,10 +41,10 @@ func TestPositionTrimming(t *testing.T) {
 	assert.Nil(t, wrapper.OpenRoot("test_pos_trim"))
 
 	path, _ := NewCheckedPath("/")
-	endpoint, _ := wrapper.assembleEndpoint(path)
+	endpoint, _ := assembleEndpoint(wrapper, path)
 	endpoint += "/dir1/dir2"
 	assert.Equal(t, "test_pos_trim/dir1/dir2", endpoint)
 
-	trimmed := wrapper.trimPosition(endpoint)
+	trimmed := trimPosition(wrapper, endpoint)
 	assert.Equal(t, "/dir1/dir2", trimmed)
 }

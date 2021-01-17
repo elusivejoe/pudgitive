@@ -7,36 +7,6 @@ import (
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
-func (w *Wrapper) assembleEndpoint(path *checkedPath) (string, error) {
-	endpoint := w.root
-
-	if !path.IsAbs() && len(w.curPosRel) > 0 {
-		endpoint += "/" + w.curPosRel
-	}
-
-	endpoint += "/" + path.Path()
-
-	validated, err := NewCheckedPath(endpoint)
-
-	if err != nil {
-		return "", err
-	}
-
-	return validated.Path(), nil
-}
-
-func (w *Wrapper) trimPosition(path string) string {
-	prefix := w.root
-
-	if len(w.curPosRel) > 0 {
-		prefix += "/" + w.curPosRel
-	}
-
-	path = strings.TrimPrefix(path, prefix)
-
-	return path
-}
-
 func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, error) {
 	pathChecked, err := NewCheckedPath(path)
 
@@ -44,7 +14,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 		return nil, err
 	}
 
-	endpoint, err := w.assembleEndpoint(pathChecked)
+	endpoint, err := assembleEndpoint(w, pathChecked)
 
 	if err != nil {
 		return nil, err
@@ -60,7 +30,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 	metaInfo := &meta.Meta{}
 
 	for _, prefix := range prefixedKeys {
-		subPath := w.trimPosition(string(prefix))
+		subPath := trimPosition(w, string(prefix))
 
 		if isRootElem := len(subPath) == 0; isRootElem {
 			continue
@@ -76,7 +46,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 			return descriptors, err
 		}
 
-		pathNorm := w.trimPosition(key)
+		pathNorm := trimPosition(w, key)
 
 		descriptors = append(descriptors, Descriptor{Path: pathNorm, Meta: *metaInfo})
 	}
@@ -96,7 +66,7 @@ func (w *Wrapper) Exists(path string) (bool, error) {
 		return false, err
 	}
 
-	endpoint, err := w.assembleEndpoint(pathChecked)
+	endpoint, err := assembleEndpoint(w, pathChecked)
 
 	if err != nil {
 		return false, err
