@@ -23,6 +23,16 @@ func TestLsDefaults(t *testing.T) {
 	assert.NotNil(t, descriptors)
 	assert.Equal(t, 4, len(descriptors))
 
+	descriptors, err = wrapper.Ls(".", 0, 0, true)
+	assert.Nil(t, err)
+	assert.NotNil(t, descriptors)
+	assert.Equal(t, 4, len(descriptors))
+
+	descriptors, err = wrapper.Ls("", 0, 0, true)
+	assert.Nil(t, err)
+	assert.NotNil(t, descriptors)
+	assert.Equal(t, 4, len(descriptors))
+
 	assert.Equal(t, "/dir_1", descriptors[0].Path)
 	assert.Equal(t, "dir_1", descriptors[0].Meta.Name)
 	assert.True(t, descriptors[0].Meta.Attrs.IsDir)

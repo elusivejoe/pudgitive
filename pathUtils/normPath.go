@@ -1,36 +1,36 @@
-package wrapper
+package pathUtils
 
 import (
 	"errors"
 	"strings"
 )
 
-type checkedPath struct {
+type NormPath struct {
 	isAbs      bool
 	normalized string
 	parts      []string
 }
 
-func (p *checkedPath) Parts() []string {
+func (p *NormPath) Parts() []string {
 	return p.parts
 }
 
-func (p *checkedPath) IsAbs() bool {
+func (p *NormPath) IsAbs() bool {
 	return p.isAbs
 }
 
-func (p *checkedPath) Path() string {
+func (p *NormPath) Path() string {
 	return p.normalized
 }
 
-func NewCheckedPath(path string) (*checkedPath, error) {
-	normalized := normalize(path)
+func NewNormPath(path string) (*NormPath, error) {
+	normalized, err := normalize(path)
 
-	if len(normalized) == 0 {
-		return nil, errors.New("empty path")
+	if err != nil {
+		return nil, err
 	}
 
-	return &checkedPath{
+	return &NormPath{
 		isAbs:      strings.HasPrefix(path, "/"),
 		normalized: normalized,
 		parts:      split(normalized),
@@ -51,7 +51,11 @@ func split(path string) []string {
 	return splits
 }
 
-func normalize(path string) string {
+func normalize(path string) (string, error) {
+	if len(path) == 0 || path == "." {
+		return "", nil
+	}
+
 	var normalized strings.Builder
 	var unique rune = -1
 
@@ -66,9 +70,23 @@ func normalize(path string) string {
 
 	path = normalized.String()
 
+	for strings.Contains(path, "/./") {
+		path = strings.ReplaceAll(path, "/./", "/")
+	}
+
+	path = strings.TrimPrefix(path, "./")
+
 	if len(path) > 1 {
 		path = strings.TrimRight(path, "/")
 	}
 
-	return path
+	if path == "/." {
+		return "/", nil
+	}
+
+	if path == "/.." {
+		return "", errors.New("cannot go higher than root")
+	}
+
+	return path, nil
 }

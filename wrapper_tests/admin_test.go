@@ -24,14 +24,14 @@ func TestAdmin(t *testing.T) {
 
 	err = wrapper.InitRoot(rootName)
 
-	assert.EqualError(t, err, "wrapper: root 'Awesome File System!' already exists")
+	assert.EqualError(t, err, "root 'Awesome File System!' already exists")
 
 	err = wrapper.OpenRoot(rootName)
 	assert.Nil(t, err)
 	assert.Equal(t, wrapper.CurrentRoot(), rootName)
 
 	err = wrapper.DeleteRoot("Some Other Root")
-	assert.EqualError(t, err, "wrapper: unable to find root 'Some Other Root'")
+	assert.EqualError(t, err, "unable to find root 'Some Other Root'")
 	assert.Equal(t, wrapper.CurrentRoot(), rootName)
 
 	err = wrapper.DeleteRoot("Another Root")

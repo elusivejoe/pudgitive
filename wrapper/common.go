@@ -2,18 +2,20 @@ package wrapper
 
 import (
 	"strings"
+
+	"github.com/elusivejoe/pudgitive/pathUtils"
 )
 
-func assembleEndpoint(w *Wrapper, path *checkedPath) (string, error) {
+func assembleEndpoint(w *Wrapper, path *pathUtils.NormPath) (string, error) {
 	endpoint := w.root
 
-	if !path.IsAbs() && len(w.curPosRel) > 0 {
-		endpoint += "/" + w.curPosRel
+	if !path.IsAbs() && len(w.where) > 0 {
+		endpoint += "/" + w.where
 	}
 
 	endpoint += "/" + path.Path()
 
-	validated, err := NewCheckedPath(endpoint)
+	validated, err := pathUtils.NewNormPath(endpoint)
 
 	if err != nil {
 		return "", err
@@ -25,8 +27,8 @@ func assembleEndpoint(w *Wrapper, path *checkedPath) (string, error) {
 func trimPosition(w *Wrapper, path string) string {
 	prefix := w.root
 
-	if len(w.curPosRel) > 0 {
-		prefix += "/" + w.curPosRel
+	if len(w.where) > 0 {
+		prefix += "/" + w.where
 	}
 
 	path = strings.TrimPrefix(path, prefix)

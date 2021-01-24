@@ -3,11 +3,13 @@ package wrapper
 import (
 	"fmt"
 
+	"github.com/elusivejoe/pudgitive/pathUtils"
+
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
 func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
-	pathChecked, err := NewCheckedPath(path)
+	pathNorm, err := pathUtils.NewNormPath(path)
 
 	if err != nil {
 		return nil, err
@@ -15,13 +17,13 @@ func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
 
 	currentPos := w.root
 
-	if !pathChecked.IsAbs() && len(w.curPosRel) > 0 {
-		currentPos += w.curPosRel
+	if !pathNorm.IsAbs() && len(w.where) > 0 {
+		currentPos += w.where
 	}
 
 	var descriptors []Descriptor
 
-	for _, part := range pathChecked.Parts() {
+	for _, part := range pathNorm.Parts() {
 		currentPos += "/" + part
 
 		exists, err := w.db.Has(currentPos)

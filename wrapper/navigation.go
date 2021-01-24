@@ -4,17 +4,19 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/elusivejoe/pudgitive/pathUtils"
+
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
 func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, error) {
-	pathChecked, err := NewCheckedPath(path)
+	pathNorm, err := pathUtils.NewNormPath(path)
 
 	if err != nil {
 		return nil, err
 	}
 
-	endpoint, err := assembleEndpoint(w, pathChecked)
+	endpoint, err := assembleEndpoint(w, pathNorm)
 
 	if err != nil {
 		return nil, err
@@ -66,18 +68,55 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 }
 
 func (w *Wrapper) Cd(path string) error {
-	fmt.Printf("Cd: %s\n", path)
+	pathNorm, err := pathUtils.NewNormPath(path)
+
+	if err != nil {
+		return err
+	}
+
+	where := ""
+
+	if pathNorm.IsAbs() {
+		where = strings.TrimPrefix(pathNorm.Path(), "/")
+	} else {
+		if len(w.where) == 0 {
+			where = pathNorm.Path()
+		} else {
+			where = w.where + "/" + pathNorm.Path()
+		}
+	}
+
+	exists, err := w.Exists(where)
+
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		return fmt.Errorf("path '%s' does not exist", path)
+	}
+
+	w.where = where
+
 	return nil
 }
 
+func (w *Wrapper) Where() string {
+	if len(w.where) > 0 {
+		return w.where
+	}
+
+	return "/"
+}
+
 func (w *Wrapper) Exists(path string) (bool, error) {
-	pathChecked, err := NewCheckedPath(path)
+	pathNorm, err := pathUtils.NewNormPath(path)
 
 	if err != nil {
 		return false, err
 	}
 
-	endpoint, err := assembleEndpoint(w, pathChecked)
+	endpoint, err := assembleEndpoint(w, pathNorm)
 
 	if err != nil {
 		return false, err

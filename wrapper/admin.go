@@ -23,7 +23,7 @@ func (w *Wrapper) InitRoot(rootName string) error {
 	}
 
 	if ok {
-		return fmt.Errorf("wrapper: root '%s' already exists", rootName)
+		return fmt.Errorf("root '%s' already exists", rootName)
 	}
 
 	w.db.Set(rootName, meta.RootMeta{Name: rootName, Magic: "pudgitive"})
@@ -39,14 +39,14 @@ func (w *Wrapper) verifyRoot(rootName string) error {
 	}
 
 	if !ok {
-		return fmt.Errorf("wrapper: unable to find root '%s'", rootName)
+		return fmt.Errorf("unable to find root '%s'", rootName)
 	}
 
 	root := meta.RootMeta{}
 	w.db.Get(rootName, &root)
 
 	if root.Magic != "pudgitive" || root.Name != rootName {
-		return fmt.Errorf("wrapper: broken root '%s' %v", rootName, root)
+		return fmt.Errorf("broken root '%s' %v", rootName, root)
 	}
 
 	return nil

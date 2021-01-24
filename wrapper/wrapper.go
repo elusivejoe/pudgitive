@@ -5,9 +5,9 @@ import (
 )
 
 type Wrapper struct {
-	db        *pudge.Db
-	root      string
-	curPosRel string
+	db    *pudge.Db
+	root  string
+	where string
 }
 
 //TODO: allow user provide path-restriction func
