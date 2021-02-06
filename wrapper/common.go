@@ -6,7 +6,7 @@ import (
 	"github.com/elusivejoe/pudgitive/pathUtils"
 )
 
-func assembleEndpoint(w *Wrapper, path *pathUtils.NormPath) (string, error) {
+func assembleEndpoint(w *Wrapper, path *pathUtils.NormPath) string {
 	endpoint := w.root
 
 	if !path.IsAbs() && len(w.where) > 0 {
@@ -15,13 +15,9 @@ func assembleEndpoint(w *Wrapper, path *pathUtils.NormPath) (string, error) {
 
 	endpoint += "/" + path.Path()
 
-	validated, err := pathUtils.NewNormPath(endpoint)
+	validated := pathUtils.NewNormPath(endpoint)
 
-	if err != nil {
-		return "", err
-	}
-
-	return validated.Path(), nil
+	return validated.Path()
 }
 
 func trimPosition(w *Wrapper, path string) string {

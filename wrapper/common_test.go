@@ -27,12 +27,10 @@ func TestEndpointAssembling(t *testing.T) {
 	assert.Nil(t, wrapper.InitRoot("test_endpoint"))
 	assert.Nil(t, wrapper.OpenRoot("test_endpoint"))
 
-	path, err := pathUtils.NewNormPath("/")
-	assert.Nil(t, err)
+	path := pathUtils.NewNormPath("/")
 	assert.True(t, path.IsAbs())
 
-	endpoint, err := assembleEndpoint(wrapper, path)
-	assert.Nil(t, err)
+	endpoint := assembleEndpoint(wrapper, path)
 	assert.Equal(t, "test_endpoint", endpoint)
 }
 
@@ -42,8 +40,8 @@ func TestPositionTrimming(t *testing.T) {
 	assert.Nil(t, wrapper.InitRoot("test_pos_trim"))
 	assert.Nil(t, wrapper.OpenRoot("test_pos_trim"))
 
-	path, _ := pathUtils.NewNormPath("/")
-	endpoint, _ := assembleEndpoint(wrapper, path)
+	path := pathUtils.NewNormPath("/")
+	endpoint := assembleEndpoint(wrapper, path)
 	endpoint += "/dir1/dir2"
 	assert.Equal(t, "test_pos_trim/dir1/dir2", endpoint)
 

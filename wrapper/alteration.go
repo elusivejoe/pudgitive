@@ -9,11 +9,7 @@ import (
 )
 
 func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
-	pathNorm, err := pathUtils.NewNormPath(path)
-
-	if err != nil {
-		return nil, err
-	}
+	pathNorm := pathUtils.NewNormPath(path)
 
 	currentPos := w.root
 

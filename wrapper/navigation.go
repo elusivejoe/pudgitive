@@ -10,17 +10,7 @@ import (
 )
 
 func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, error) {
-	pathNorm, err := pathUtils.NewNormPath(path)
-
-	if err != nil {
-		return nil, err
-	}
-
-	endpoint, err := assembleEndpoint(w, pathNorm)
-
-	if err != nil {
-		return nil, err
-	}
+	endpoint := assembleEndpoint(w, pathUtils.NewNormPath(path))
 
 	prefixedKeys, err := w.db.KeysByPrefix([]byte(endpoint), 0, 0, asc)
 
@@ -68,11 +58,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 }
 
 func (w *Wrapper) Cd(path string) error {
-	pathNorm, err := pathUtils.NewNormPath(path)
-
-	if err != nil {
-		return err
-	}
+	pathNorm := pathUtils.NewNormPath(path)
 
 	where := ""
 
@@ -110,17 +96,7 @@ func (w *Wrapper) Where() string {
 }
 
 func (w *Wrapper) Exists(path string) (bool, error) {
-	pathNorm, err := pathUtils.NewNormPath(path)
-
-	if err != nil {
-		return false, err
-	}
-
-	endpoint, err := assembleEndpoint(w, pathNorm)
-
-	if err != nil {
-		return false, err
-	}
+	endpoint := assembleEndpoint(w, pathUtils.NewNormPath(path))
 
 	ok, err := w.db.Has(endpoint)
 

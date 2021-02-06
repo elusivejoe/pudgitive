@@ -1,7 +1,6 @@
 package pathUtils
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -23,18 +22,14 @@ func (p *NormPath) Path() string {
 	return p.normalized
 }
 
-func NewNormPath(path string) (*NormPath, error) {
-	normalized, err := normalize(path)
-
-	if err != nil {
-		return nil, err
-	}
+func NewNormPath(path string) *NormPath {
+	normalized := normalize(path)
 
 	return &NormPath{
 		isAbs:      strings.HasPrefix(path, "/"),
 		normalized: normalized,
 		parts:      split(normalized),
-	}, nil
+	}
 }
 
 func split(path string) []string {
@@ -51,9 +46,9 @@ func split(path string) []string {
 	return splits
 }
 
-func normalize(path string) (string, error) {
+func normalize(path string) string {
 	if len(path) == 0 || path == "." {
-		return "", nil
+		return ""
 	}
 
 	var normalized strings.Builder
@@ -81,12 +76,8 @@ func normalize(path string) (string, error) {
 	}
 
 	if path == "/." {
-		return "/", nil
+		return "/"
 	}
 
-	if path == "/.." {
-		return "", errors.New("cannot go higher than root")
-	}
-
-	return path, nil
+	return path
 }

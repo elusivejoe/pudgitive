@@ -10,8 +10,7 @@ import (
 
 func TestNormPath(t *testing.T) {
 	empty := ""
-	path, err := pathUtils.NewNormPath(empty)
-	assert.Nil(t, err)
+	path := pathUtils.NewNormPath(empty)
 	assert.NotNil(t, path)
 	assert.False(t, path.IsAbs())
 	assert.Equal(t, "", path.Path())
@@ -19,8 +18,7 @@ func TestNormPath(t *testing.T) {
 	assert.Equal(t, "", path.Parts()[0])
 
 	curious := "//////folder1/////folll\\der2////Spa   Ces//"
-	path, err = pathUtils.NewNormPath(curious)
-	assert.Nil(t, err)
+	path = pathUtils.NewNormPath(curious)
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/folder1/folll\\der2/Spa   Ces", path.Path())
@@ -30,8 +28,7 @@ func TestNormPath(t *testing.T) {
 	assert.Equal(t, "Spa   Ces", path.Parts()[2])
 
 	regularAbs := "/folder1/folder2/3folder"
-	path, err = pathUtils.NewNormPath(regularAbs)
-	assert.Nil(t, err)
+	path = pathUtils.NewNormPath(regularAbs)
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, regularAbs, path.Path())
@@ -41,8 +38,7 @@ func TestNormPath(t *testing.T) {
 	assert.Equal(t, "3folder", path.Parts()[2])
 
 	normalRel := "folder1/folder2"
-	path, err = pathUtils.NewNormPath(normalRel)
-	assert.Nil(t, err)
+	path = pathUtils.NewNormPath(normalRel)
 	assert.NotNil(t, path)
 	assert.False(t, path.IsAbs())
 	assert.Equal(t, normalRel, path.Path())
@@ -53,13 +49,13 @@ func TestNormPath(t *testing.T) {
 
 func TestManyDots(t *testing.T) {
 	withManyDots := "/././././././.."
-	path, err := pathUtils.NewNormPath(withManyDots)
-	assert.Nil(t, path)
-	assert.EqualError(t, err, "cannot go higher than root")
+	path := pathUtils.NewNormPath(withManyDots)
+	assert.True(t, path.IsAbs())
+	assert.Equal(t, 1, len(path.Parts()))
+	assert.Equal(t, "/..", path.Path())
 
 	withManyDots = "./././././../ab"
-	path, err = pathUtils.NewNormPath(withManyDots)
-	assert.Nil(t, err)
+	path = pathUtils.NewNormPath(withManyDots)
 	assert.NotNil(t, path)
 	assert.Equal(t, "../ab", path.Path())
 	assert.Equal(t, 2, len(path.Parts()))
@@ -67,8 +63,7 @@ func TestManyDots(t *testing.T) {
 	assert.Equal(t, "ab", path.Parts()[1])
 
 	withManyDots = "/./..a a./../.././..a a../......./.a/a./a"
-	path, err = pathUtils.NewNormPath(withManyDots)
-	assert.Nil(t, err)
+	path = pathUtils.NewNormPath(withManyDots)
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/..a a./../../..a a../......./.a/a./a", path.Path())
@@ -84,28 +79,21 @@ func TestManyDots(t *testing.T) {
 }
 
 func TestNormRootOnly(t *testing.T) {
-	path, err := pathUtils.NewNormPath("///////")
-	assert.Nil(t, err)
+	path := pathUtils.NewNormPath("///////")
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/", path.Path())
 	assert.Equal(t, 0, len(path.Parts()))
 
-	path, err = pathUtils.NewNormPath("/")
-	assert.Nil(t, err)
+	path = pathUtils.NewNormPath("/")
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/", path.Path())
 	assert.Equal(t, 0, len(path.Parts()))
 
-	path, err = pathUtils.NewNormPath("/.")
-	assert.Nil(t, err)
+	path = pathUtils.NewNormPath("/.")
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/", path.Path())
 	assert.Equal(t, 0, len(path.Parts()))
-
-	path, err = pathUtils.NewNormPath("/..")
-	assert.Nil(t, path)
-	assert.EqualError(t, err, "cannot go higher than root")
 }
