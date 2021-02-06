@@ -13,6 +13,20 @@ func TestNavPath(t *testing.T) {
 	assert.Nil(t, navPath)
 	assert.EqualError(t, err, "nil path provided")
 
+	navPath, err = pathUtils.NewNavPath(pathUtils.NewNormPath("/"))
+	assert.Nil(t, err)
+	assert.NotNil(t, navPath)
+	assert.Equal(t, 1, len(navPath.AllDestinations()))
+	assert.True(t, navPath.AllDestinations()[0].IsAbs())
+	assert.Equal(t, "/", navPath.AllDestinations()[0].Path())
+
+	navPath, err = pathUtils.NewNavPath(pathUtils.NewNormPath(""))
+	assert.Nil(t, err)
+	assert.NotNil(t, navPath)
+	assert.Equal(t, 1, len(navPath.AllDestinations()))
+	assert.False(t, navPath.AllDestinations()[0].IsAbs())
+	assert.Equal(t, "", navPath.AllDestinations()[0].Path())
+
 	navPath, err = pathUtils.NewNavPath(pathUtils.NewNormPath("/ab/c/d"))
 	assert.Nil(t, err)
 	assert.NotNil(t, navPath)

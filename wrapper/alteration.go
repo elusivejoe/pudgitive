@@ -9,17 +9,39 @@ import (
 )
 
 func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
-	pathNorm := pathUtils.NewNormPath(path)
+	navPath, err := pathUtils.NewNavPath(pathUtils.NewNormPath(path))
 
-	currentPos := w.root
-
-	if !pathNorm.IsAbs() && len(w.where) > 0 {
-		currentPos += w.where
+	if err != nil {
+		return nil, err
 	}
 
 	var descriptors []Descriptor
 
-	for _, part := range pathNorm.Parts() {
+	for _, path := range navPath.AllDestinations() {
+		subDescriptors, err := w.mkDir(path)
+
+		for _, desc := range subDescriptors {
+			descriptors = append(descriptors, desc)
+		}
+
+		if err != nil {
+			return descriptors, err
+		}
+	}
+
+	return descriptors, nil
+}
+
+func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]Descriptor, error) {
+	currentPos := w.root
+
+	if !path.IsAbs() && len(w.where) > 0 {
+		currentPos += "/" + w.where
+	}
+
+	var descriptors []Descriptor
+
+	for _, part := range path.Parts() {
 		currentPos += "/" + part
 
 		exists, err := w.db.Has(currentPos)
@@ -35,7 +57,7 @@ func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
 		meta := meta.NewMeta(part, true)
 
 		if err := w.db.Set(currentPos, meta); err != nil {
-			return nil, err
+			return descriptors, err
 		}
 
 		descriptors = append(descriptors, Descriptor{currentPos, meta})

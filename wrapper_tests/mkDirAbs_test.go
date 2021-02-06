@@ -62,3 +62,64 @@ func TestMkDirAbs(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, ok)
 }
+
+func TestMkDirAbsDots(t *testing.T) {
+	wrapper := createWrapper(t)
+
+	assert.Nil(t, wrapper.InitRoot("test_mkdir"))
+	assert.Nil(t, wrapper.OpenRoot("test_mkdir"))
+
+	ok, err := wrapper.Exists("a")
+	assert.Nil(t, err)
+	assert.False(t, ok)
+
+	ok, err = wrapper.Exists("a/b")
+	assert.Nil(t, err)
+	assert.False(t, ok)
+
+	ok, err = wrapper.Exists("a/b/c")
+	assert.Nil(t, err)
+	assert.False(t, ok)
+
+	ok, err = wrapper.Exists("a/b/d")
+	assert.Nil(t, err)
+	assert.False(t, ok)
+
+	ok, err = wrapper.Exists("a/b/d/e")
+	assert.Nil(t, err)
+	assert.False(t, ok)
+
+	descriptors, err := wrapper.MkDir("/a/b/c/../d/e")
+	assert.Nil(t, err)
+	assert.NotNil(t, descriptors)
+
+	for _, descriptor := range descriptors {
+		assert.True(t, descriptor.Meta.Attrs.IsDir)
+	}
+
+	assert.Equal(t, "a", descriptors[0].Meta.Name)
+	assert.Equal(t, "b", descriptors[1].Meta.Name)
+	assert.Equal(t, "c", descriptors[2].Meta.Name)
+	assert.Equal(t, "d", descriptors[3].Meta.Name)
+	assert.Equal(t, "e", descriptors[4].Meta.Name)
+
+	ok, err = wrapper.Exists("a")
+	assert.Nil(t, err)
+	assert.True(t, ok)
+
+	ok, err = wrapper.Exists("a/b")
+	assert.Nil(t, err)
+	assert.True(t, ok)
+
+	ok, err = wrapper.Exists("a/b/c")
+	assert.Nil(t, err)
+	assert.True(t, ok)
+
+	ok, err = wrapper.Exists("a/b/d")
+	assert.Nil(t, err)
+	assert.True(t, ok)
+
+	ok, err = wrapper.Exists("a/b/d/e")
+	assert.Nil(t, err)
+	assert.True(t, ok)
+}

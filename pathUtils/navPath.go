@@ -103,6 +103,10 @@ func filterSubPaths(subPaths []string) []string {
 }
 
 func normalizeSubPaths(subPaths []string, isAbs bool) ([]*NormPath, error) {
+	if len(subPaths) == 0 {
+		subPaths = []string{""}
+	}
+
 	var result []*NormPath
 
 	for _, subPath := range subPaths {
