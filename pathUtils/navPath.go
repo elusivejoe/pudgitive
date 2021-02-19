@@ -23,11 +23,11 @@ func NewNavPath(path *NormPath) (*NavPath, error) {
 	return &NavPath{resolvedPaths: resolvedPaths}, nil
 }
 
-func (p *NavPath) AllDestinations() []*NormPath {
+func (p *NavPath) DestList() []*NormPath {
 	return p.resolvedPaths
 }
 
-func (p *NavPath) FinalDestination() *NormPath {
+func (p *NavPath) FinalDest() *NormPath {
 	return p.resolvedPaths[len(p.resolvedPaths)-1]
 }
 

@@ -10,13 +10,14 @@ import (
 )
 
 func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, error) {
-	navPath, err := pathUtils.NewNavPath(pathUtils.NewNormPath(path))
+	normPath := pathUtils.NewNormPath(path)
+	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, normPath))
 
 	if err != nil {
 		return nil, err
 	}
 
-	endpoint := assembleEndpoint(w, navPath.FinalDestination())
+	endpoint := pathUtils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
 
 	prefixedKeys, err := w.db.KeysByPrefix([]byte(endpoint), 0, 0, asc)
 
@@ -30,7 +31,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 	currentOffset := 0
 
 	for _, prefix := range prefixedKeys {
-		subPath := trimPosition(w, string(prefix))
+		subPath := trimPosition(w, string(prefix), normPath.IsAbs())
 
 		if isRootElem := len(subPath) == 0; isRootElem {
 			continue
@@ -51,7 +52,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 			return descriptors, err
 		}
 
-		pathNorm := trimPosition(w, key)
+		pathNorm := trimPosition(w, key, normPath.IsAbs())
 
 		descriptors = append(descriptors, Descriptor{Path: pathNorm, Meta: *metaInfo})
 
@@ -64,13 +65,13 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 }
 
 func (w *Wrapper) Cd(path string) error {
-	navPath, err := pathUtils.NewNavPath(pathUtils.NewNormPath(path))
+	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
 
 	if err != nil {
 		return err
 	}
 
-	pathNorm := navPath.FinalDestination()
+	pathNorm := navPath.FinalDest()
 
 	where := ""
 
@@ -108,13 +109,13 @@ func (w *Wrapper) Where() string {
 }
 
 func (w *Wrapper) Exists(path string) (bool, error) {
-	navPath, err := pathUtils.NewNavPath(pathUtils.NewNormPath(path))
+	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
 
 	if err != nil {
 		return false, err
 	}
 
-	endpoint := assembleEndpoint(w, navPath.FinalDestination())
+	endpoint := pathUtils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
 
 	ok, err := w.db.Has(endpoint)
 

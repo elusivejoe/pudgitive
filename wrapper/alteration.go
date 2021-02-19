@@ -9,7 +9,7 @@ import (
 )
 
 func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
-	navPath, err := pathUtils.NewNavPath(pathUtils.NewNormPath(path))
+	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
 
 	if err != nil {
 		return nil, err
@@ -17,7 +17,7 @@ func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
 
 	var descriptors []Descriptor
 
-	for _, path := range navPath.AllDestinations() {
+	for _, path := range navPath.DestList() {
 		subDescriptors, err := w.mkDir(path)
 
 		for _, desc := range subDescriptors {
@@ -34,10 +34,6 @@ func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
 
 func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]Descriptor, error) {
 	currentPos := w.root
-
-	if !path.IsAbs() && len(w.where) > 0 {
-		currentPos += "/" + w.where
-	}
 
 	var descriptors []Descriptor
 

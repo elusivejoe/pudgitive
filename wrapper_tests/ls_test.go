@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLsDefaults(t *testing.T) {
+func TestLsAbs(t *testing.T) {
 	wrapper := createWrapper(t)
 
 	assert.Nil(t, wrapper.InitRoot("test_ls"))
@@ -18,10 +18,20 @@ func TestLsDefaults(t *testing.T) {
 	wrapper.MkDir("/dir_4/dir_5")
 	wrapper.MkDir("/dir_4/dir_5/dir_6")
 
+	err := wrapper.Cd("/dir_4/dir_5/dir_6")
+	assert.Nil(t, err)
+
 	descriptors, err := wrapper.Ls("/", 0, 0, true)
 	assert.Nil(t, err)
 	assert.NotNil(t, descriptors)
 	assert.Equal(t, 4, len(descriptors))
+
+	descriptors, err = wrapper.Ls(".", 0, 0, true)
+	assert.Nil(t, err)
+	assert.Nil(t, descriptors)
+
+	err = wrapper.Cd("/")
+	assert.Nil(t, err)
 
 	descriptors, err = wrapper.Ls(".", 0, 0, true)
 	assert.Nil(t, err)

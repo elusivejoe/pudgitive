@@ -6,24 +6,18 @@ import (
 	"github.com/elusivejoe/pudgitive/pathUtils"
 )
 
-func assembleEndpoint(w *Wrapper, path *pathUtils.NormPath) string {
-	endpoint := w.root
-
+func resolveAbsolute(w *Wrapper, path *pathUtils.NormPath) *pathUtils.NormPath {
 	if !path.IsAbs() && len(w.where) > 0 {
-		endpoint += "/" + w.where
+		return pathUtils.NewNormPath("/" + w.where + "/" + path.Path())
 	}
 
-	endpoint += "/" + path.Path()
-
-	validated := pathUtils.NewNormPath(endpoint)
-
-	return validated.Path()
+	return path
 }
 
-func trimPosition(w *Wrapper, path string) string {
+func trimPosition(w *Wrapper, path string, isAbs bool) string {
 	prefix := w.root
 
-	if len(w.where) > 0 {
+	if !isAbs && len(w.where) > 0 {
 		prefix += "/" + w.where
 	}
 
