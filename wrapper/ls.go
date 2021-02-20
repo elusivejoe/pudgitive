@@ -1,7 +1,6 @@
 package wrapper
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/elusivejoe/pudgitive/pathUtils"
@@ -62,71 +61,4 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 	}
 
 	return descriptors, nil
-}
-
-func (w *Wrapper) Cd(path string) error {
-	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
-
-	if err != nil {
-		return err
-	}
-
-	pathNorm := navPath.FinalDest()
-
-	where := ""
-
-	if pathNorm.IsAbs() {
-		where = strings.TrimPrefix(pathNorm.Path(), "/")
-	} else {
-		if len(w.where) == 0 {
-			where = pathNorm.Path()
-		} else {
-			where = w.where + "/" + pathNorm.Path()
-		}
-	}
-
-	exists, err := w.Exists(where)
-
-	if err != nil {
-		return err
-	}
-
-	if !exists {
-		return fmt.Errorf("path '%s' does not exist", path)
-	}
-
-	w.where = where
-
-	return nil
-}
-
-func (w *Wrapper) Where() string {
-	if len(w.where) > 0 {
-		return w.where
-	}
-
-	return "/"
-}
-
-func (w *Wrapper) Exists(path string) (bool, error) {
-	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
-
-	if err != nil {
-		return false, err
-	}
-
-	endpoint := pathUtils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
-
-	ok, err := w.db.Has(endpoint)
-
-	if err != nil {
-		return false, err
-	}
-
-	return ok, nil
-}
-
-func (w *Wrapper) IsDir(path string) (bool, error) {
-	fmt.Printf("IsDir: %s\n", path)
-	return false, nil
 }

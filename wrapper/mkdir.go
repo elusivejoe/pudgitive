@@ -1,8 +1,6 @@
 package wrapper
 
 import (
-	"fmt"
-
 	"github.com/elusivejoe/pudgitive/pathUtils"
 
 	"github.com/elusivejoe/pudgitive/meta"
@@ -60,24 +58,4 @@ func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]Descriptor, error) {
 	}
 
 	return descriptors, nil
-}
-
-func (w *Wrapper) MkFile(path string) (meta.Meta, error) {
-	fmt.Printf("MkFile: %s\n", path)
-	return meta.NewMeta(path, false), nil
-}
-
-func (w *Wrapper) RmDir(path string, recursive bool) error {
-	fmt.Printf("RmDir: %s recursive: %t\n", path, recursive)
-	return nil
-}
-
-func (w *Wrapper) RmFile(path string) error {
-	fmt.Printf("RmFile: %s\n", path)
-	return nil
-}
-
-func (w *Wrapper) Mv(src string, dst string) error {
-	fmt.Printf("Mv: from %s to: %s\n", src, dst)
-	return nil
 }
