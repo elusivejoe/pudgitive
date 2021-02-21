@@ -18,22 +18,19 @@ func TestCd(t *testing.T) {
 	wrapper.MkDir("/dir_1/dir_2")
 	wrapper.MkDir("/dir_1/dir_3")
 
-	descriptors, err := wrapper.Ls("/", 0, 0, true)
+	metas, err := wrapper.Ls("/", 0, 0, true)
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
-	assert.Equal(t, 3, len(descriptors))
+	assert.NotNil(t, metas)
+	assert.Equal(t, 3, len(metas))
 
-	assert.Equal(t, "/dir_1", descriptors[0].Path)
-	assert.Equal(t, "dir_1", descriptors[0].Meta.Name)
-	assert.True(t, descriptors[0].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_1", metas[0].Name)
+	assert.True(t, metas[0].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_2", descriptors[1].Path)
-	assert.Equal(t, "dir_2", descriptors[1].Meta.Name)
-	assert.True(t, descriptors[1].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_2", metas[1].Name)
+	assert.True(t, metas[1].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_3", descriptors[2].Path)
-	assert.Equal(t, "dir_3", descriptors[2].Meta.Name)
-	assert.True(t, descriptors[2].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_3", metas[2].Name)
+	assert.True(t, metas[2].Attrs.IsDir)
 
 	err = wrapper.Cd("dir_1")
 	assert.Nil(t, err)

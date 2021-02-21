@@ -6,34 +6,34 @@ import (
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
-func (w *Wrapper) MkDir(path string) ([]Descriptor, error) {
+func (w *Wrapper) MkDir(path string) ([]meta.Meta, error) {
 	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
 
 	if err != nil {
 		return nil, err
 	}
 
-	var descriptors []Descriptor
+	var metas []meta.Meta
 
 	for _, path := range navPath.DestList() {
-		subDescriptors, err := w.mkDir(path)
+		subMetas, err := w.mkDir(path)
 
-		for _, desc := range subDescriptors {
-			descriptors = append(descriptors, desc)
+		for _, meta := range subMetas {
+			metas = append(metas, meta)
 		}
 
 		if err != nil {
-			return descriptors, err
+			return metas, err
 		}
 	}
 
-	return descriptors, nil
+	return metas, nil
 }
 
-func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]Descriptor, error) {
+func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]meta.Meta, error) {
 	currentPos := w.root
 
-	var descriptors []Descriptor
+	var metas []meta.Meta
 
 	for _, part := range path.Parts() {
 		currentPos += "/" + part
@@ -41,7 +41,7 @@ func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]Descriptor, error) {
 		exists, err := w.db.Has(currentPos)
 
 		if err != nil {
-			return descriptors, err
+			return metas, err
 		}
 
 		if exists {
@@ -51,11 +51,11 @@ func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]Descriptor, error) {
 		meta := meta.NewMeta(part, true)
 
 		if err := w.db.Set(currentPos, meta); err != nil {
-			return descriptors, err
+			return metas, err
 		}
 
-		descriptors = append(descriptors, Descriptor{currentPos, meta})
+		metas = append(metas, meta)
 	}
 
-	return descriptors, nil
+	return metas, nil
 }

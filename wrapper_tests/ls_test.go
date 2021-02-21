@@ -21,43 +21,39 @@ func TestLsAbs(t *testing.T) {
 	err := wrapper.Cd("/dir_4/dir_5/dir_6")
 	assert.Nil(t, err)
 
-	descriptors, err := wrapper.Ls("/", 0, 0, true)
+	metas, err := wrapper.Ls("/", 0, 0, true)
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
-	assert.Equal(t, 4, len(descriptors))
+	assert.NotNil(t, metas)
+	assert.Equal(t, 4, len(metas))
 
-	descriptors, err = wrapper.Ls(".", 0, 0, true)
+	metas, err = wrapper.Ls(".", 0, 0, true)
 	assert.Nil(t, err)
-	assert.Nil(t, descriptors)
+	assert.Nil(t, metas)
 
 	err = wrapper.Cd("/")
 	assert.Nil(t, err)
 
-	descriptors, err = wrapper.Ls(".", 0, 0, true)
+	metas, err = wrapper.Ls(".", 0, 0, true)
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
-	assert.Equal(t, 4, len(descriptors))
+	assert.NotNil(t, metas)
+	assert.Equal(t, 4, len(metas))
 
-	descriptors, err = wrapper.Ls("", 0, 0, true)
+	metas, err = wrapper.Ls("", 0, 0, true)
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
-	assert.Equal(t, 4, len(descriptors))
+	assert.NotNil(t, metas)
+	assert.Equal(t, 4, len(metas))
 
-	assert.Equal(t, "/dir_1", descriptors[0].Path)
-	assert.Equal(t, "dir_1", descriptors[0].Meta.Name)
-	assert.True(t, descriptors[0].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_1", metas[0].Name)
+	assert.True(t, metas[0].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_2", descriptors[1].Path)
-	assert.Equal(t, "dir_2", descriptors[1].Meta.Name)
-	assert.True(t, descriptors[1].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_2", metas[1].Name)
+	assert.True(t, metas[1].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_3", descriptors[2].Path)
-	assert.Equal(t, "dir_3", descriptors[2].Meta.Name)
-	assert.True(t, descriptors[2].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_3", metas[2].Name)
+	assert.True(t, metas[2].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_4", descriptors[3].Path)
-	assert.Equal(t, "dir_4", descriptors[3].Meta.Name)
-	assert.True(t, descriptors[3].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_4", metas[3].Name)
+	assert.True(t, metas[3].Attrs.IsDir)
 }
 
 func TestLsDesc(t *testing.T) {
@@ -72,26 +68,22 @@ func TestLsDesc(t *testing.T) {
 	wrapper.MkDir("/dir_4/dir_5")
 	wrapper.MkDir("/dir_4/dir_5/dir_6")
 
-	descriptors, err := wrapper.Ls("/", 0, 0, false)
+	metas, err := wrapper.Ls("/", 0, 0, false)
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
-	assert.Equal(t, 4, len(descriptors))
+	assert.NotNil(t, metas)
+	assert.Equal(t, 4, len(metas))
 
-	assert.Equal(t, "/dir_4", descriptors[0].Path)
-	assert.Equal(t, "dir_4", descriptors[0].Meta.Name)
-	assert.True(t, descriptors[0].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_4", metas[0].Name)
+	assert.True(t, metas[0].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_3", descriptors[1].Path)
-	assert.Equal(t, "dir_3", descriptors[1].Meta.Name)
-	assert.True(t, descriptors[1].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_3", metas[1].Name)
+	assert.True(t, metas[1].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_2", descriptors[2].Path)
-	assert.Equal(t, "dir_2", descriptors[2].Meta.Name)
-	assert.True(t, descriptors[2].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_2", metas[2].Name)
+	assert.True(t, metas[2].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_1", descriptors[3].Path)
-	assert.Equal(t, "dir_1", descriptors[3].Meta.Name)
-	assert.True(t, descriptors[3].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_1", metas[3].Name)
+	assert.True(t, metas[3].Attrs.IsDir)
 }
 
 func TestLsOffsLimAsc(t *testing.T) {
@@ -106,18 +98,16 @@ func TestLsOffsLimAsc(t *testing.T) {
 	wrapper.MkDir("/dir_4/dir_5")
 	wrapper.MkDir("/dir_4/dir_5/dir_6")
 
-	descriptors, err := wrapper.Ls("/", 2, 2, true)
+	metas, err := wrapper.Ls("/", 2, 2, true)
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
-	assert.Equal(t, 2, len(descriptors))
+	assert.NotNil(t, metas)
+	assert.Equal(t, 2, len(metas))
 
-	assert.Equal(t, "/dir_3", descriptors[0].Path)
-	assert.Equal(t, "dir_3", descriptors[0].Meta.Name)
-	assert.True(t, descriptors[0].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_3", metas[0].Name)
+	assert.True(t, metas[0].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_4", descriptors[1].Path)
-	assert.Equal(t, "dir_4", descriptors[1].Meta.Name)
-	assert.True(t, descriptors[1].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_4", metas[1].Name)
+	assert.True(t, metas[1].Attrs.IsDir)
 }
 
 func TestLsOffsLimDesc(t *testing.T) {
@@ -132,16 +122,14 @@ func TestLsOffsLimDesc(t *testing.T) {
 	wrapper.MkDir("/dir_4/dir_5")
 	wrapper.MkDir("/dir_4/dir_5/dir_6")
 
-	descriptors, err := wrapper.Ls("/", 2, 2, false)
+	metas, err := wrapper.Ls("/", 2, 2, false)
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
-	assert.Equal(t, 2, len(descriptors))
+	assert.NotNil(t, metas)
+	assert.Equal(t, 2, len(metas))
 
-	assert.Equal(t, "/dir_2", descriptors[0].Path)
-	assert.Equal(t, "dir_2", descriptors[0].Meta.Name)
-	assert.True(t, descriptors[0].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_2", metas[0].Name)
+	assert.True(t, metas[0].Attrs.IsDir)
 
-	assert.Equal(t, "/dir_1", descriptors[1].Path)
-	assert.Equal(t, "dir_1", descriptors[1].Meta.Name)
-	assert.True(t, descriptors[1].Meta.Attrs.IsDir)
+	assert.Equal(t, "dir_1", metas[1].Name)
+	assert.True(t, metas[1].Attrs.IsDir)
 }

@@ -28,23 +28,23 @@ func TestMkDirAbs(t *testing.T) {
 	assert.Nil(t, err)
 	assert.False(t, ok)
 
-	descriptors, err := wrapper.MkDir("/dir_1/dir_2/dir_3")
+	metas, err := wrapper.MkDir("/dir_1/dir_2/dir_3")
 	assert.Nil(t, err)
-	assert.Equal(t, 3, len(descriptors))
+	assert.Equal(t, 3, len(metas))
 
-	for _, descriptor := range descriptors {
-		assert.True(t, descriptor.Meta.Attrs.IsDir)
+	for _, meta := range metas {
+		assert.True(t, meta.Attrs.IsDir)
 	}
 
-	assert.Equal(t, "dir_1", descriptors[0].Meta.Name)
-	assert.Equal(t, "dir_2", descriptors[1].Meta.Name)
-	assert.Equal(t, "dir_3", descriptors[2].Meta.Name)
+	assert.Equal(t, "dir_1", metas[0].Name)
+	assert.Equal(t, "dir_2", metas[1].Name)
+	assert.Equal(t, "dir_3", metas[2].Name)
 
-	descriptors, err = wrapper.MkDir("/dir_1/dir_2/dir_4")
+	metas, err = wrapper.MkDir("/dir_1/dir_2/dir_4")
 	assert.Nil(t, err)
-	assert.Equal(t, 1, len(descriptors))
-	assert.True(t, descriptors[0].Meta.Attrs.IsDir)
-	assert.Equal(t, "dir_4", descriptors[0].Meta.Name)
+	assert.Equal(t, 1, len(metas))
+	assert.True(t, metas[0].Attrs.IsDir)
+	assert.Equal(t, "dir_4", metas[0].Name)
 
 	ok, err = wrapper.Exists("/dir_1")
 	assert.Nil(t, err)
@@ -89,19 +89,19 @@ func TestMkDirAbsDots(t *testing.T) {
 	assert.Nil(t, err)
 	assert.False(t, ok)
 
-	descriptors, err := wrapper.MkDir("/a/b/c/../d/e")
+	meats, err := wrapper.MkDir("/a/b/c/../d/e")
 	assert.Nil(t, err)
-	assert.NotNil(t, descriptors)
+	assert.NotNil(t, meats)
 
-	for _, descriptor := range descriptors {
-		assert.True(t, descriptor.Meta.Attrs.IsDir)
+	for _, meta := range meats {
+		assert.True(t, meta.Attrs.IsDir)
 	}
 
-	assert.Equal(t, "a", descriptors[0].Meta.Name)
-	assert.Equal(t, "b", descriptors[1].Meta.Name)
-	assert.Equal(t, "c", descriptors[2].Meta.Name)
-	assert.Equal(t, "d", descriptors[3].Meta.Name)
-	assert.Equal(t, "e", descriptors[4].Meta.Name)
+	assert.Equal(t, "a", meats[0].Name)
+	assert.Equal(t, "b", meats[1].Name)
+	assert.Equal(t, "c", meats[2].Name)
+	assert.Equal(t, "d", meats[3].Name)
+	assert.Equal(t, "e", meats[4].Name)
 
 	ok, err = wrapper.Exists("a")
 	assert.Nil(t, err)

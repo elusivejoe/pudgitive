@@ -8,7 +8,7 @@ import (
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
-func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, error) {
+func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, error) {
 	normPath := pathUtils.NewNormPath(path)
 	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, normPath))
 
@@ -24,7 +24,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 		return nil, err
 	}
 
-	var descriptors []Descriptor
+	var metas []meta.Meta
 	metaInfo := &meta.Meta{}
 
 	currentOffset := 0
@@ -48,17 +48,15 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]Descriptor, er
 		key := endpoint + subPath
 
 		if err := w.db.Get(key, metaInfo); err != nil {
-			return descriptors, err
+			return metas, err
 		}
 
-		pathNorm := trimPosition(w, key, normPath.IsAbs())
+		metas = append(metas, *metaInfo)
 
-		descriptors = append(descriptors, Descriptor{Path: pathNorm, Meta: *metaInfo})
-
-		if limit > 0 && len(descriptors) == limit {
+		if limit > 0 && len(metas) == limit {
 			break
 		}
 	}
 
-	return descriptors, nil
+	return metas, nil
 }
