@@ -25,7 +25,7 @@ func TestPositionTrimming(t *testing.T) {
 	assert.Nil(t, wrapper.InitRoot("test_pos_trim"))
 	assert.Nil(t, wrapper.OpenRoot("test_pos_trim"))
 
-	wrapper.where = "a/b/c"
+	wrapper.pwd = "a/b/c"
 	assert.Equal(t, "/a/b/c", trimPosition(wrapper, "test_pos_trim/a/b/c", true))
 	assert.Equal(t, "/d/e", trimPosition(wrapper, "test_pos_trim/a/b/c/d/e", false))
 }

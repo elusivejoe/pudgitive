@@ -15,13 +15,13 @@ func (w *Wrapper) Cd(path string) error {
 	}
 
 	pathNorm := navPath.FinalDest()
-	where := ""
+	pwd := ""
 
 	if pathNorm.Path() != "/" {
-		where = pathNorm.Path()
+		pwd = pathNorm.Path()
 	}
 
-	exists, err := w.Exists(where)
+	exists, err := w.Exists(pwd)
 
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func (w *Wrapper) Cd(path string) error {
 		return fmt.Errorf("path '%s' does not exist", path)
 	}
 
-	w.where = strings.TrimPrefix(where, "/")
+	w.pwd = strings.TrimPrefix(pwd, "/")
 
 	return nil
 }

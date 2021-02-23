@@ -1,8 +1,8 @@
 package wrapper
 
 func (w *Wrapper) Pwd() string {
-	if len(w.where) > 0 {
-		return w.where
+	if len(w.pwd) > 0 {
+		return w.pwd
 	}
 
 	return "/"
