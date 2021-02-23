@@ -1,16 +1,16 @@
-package pathUtils_tests
+package utils_tests
 
 import (
 	"testing"
 
-	"github.com/elusivejoe/pudgitive/pathUtils"
+	"github.com/elusivejoe/pudgitive/utils"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNormPath(t *testing.T) {
 	empty := ""
-	path := pathUtils.NewNormPath(empty)
+	path := utils.NewNormPath(empty)
 	assert.NotNil(t, path)
 	assert.False(t, path.IsAbs())
 	assert.Equal(t, "", path.Path())
@@ -18,7 +18,7 @@ func TestNormPath(t *testing.T) {
 	assert.Equal(t, "", path.Parts()[0])
 
 	curious := "//////folder1/////folll\\der2////Spa   Ces//"
-	path = pathUtils.NewNormPath(curious)
+	path = utils.NewNormPath(curious)
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/folder1/folll\\der2/Spa   Ces", path.Path())
@@ -28,7 +28,7 @@ func TestNormPath(t *testing.T) {
 	assert.Equal(t, "Spa   Ces", path.Parts()[2])
 
 	regularAbs := "/folder1/folder2/3folder"
-	path = pathUtils.NewNormPath(regularAbs)
+	path = utils.NewNormPath(regularAbs)
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, regularAbs, path.Path())
@@ -38,7 +38,7 @@ func TestNormPath(t *testing.T) {
 	assert.Equal(t, "3folder", path.Parts()[2])
 
 	normalRel := "folder1/folder2"
-	path = pathUtils.NewNormPath(normalRel)
+	path = utils.NewNormPath(normalRel)
 	assert.NotNil(t, path)
 	assert.False(t, path.IsAbs())
 	assert.Equal(t, normalRel, path.Path())
@@ -49,13 +49,13 @@ func TestNormPath(t *testing.T) {
 
 func TestManyDots(t *testing.T) {
 	withManyDots := "/././././././.."
-	path := pathUtils.NewNormPath(withManyDots)
+	path := utils.NewNormPath(withManyDots)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, 1, len(path.Parts()))
 	assert.Equal(t, "/..", path.Path())
 
 	withManyDots = "./././././../ab"
-	path = pathUtils.NewNormPath(withManyDots)
+	path = utils.NewNormPath(withManyDots)
 	assert.NotNil(t, path)
 	assert.Equal(t, "../ab", path.Path())
 	assert.Equal(t, 2, len(path.Parts()))
@@ -63,7 +63,7 @@ func TestManyDots(t *testing.T) {
 	assert.Equal(t, "ab", path.Parts()[1])
 
 	withManyDots = "/./..a a./../.././..a a../......./.a/a./a"
-	path = pathUtils.NewNormPath(withManyDots)
+	path = utils.NewNormPath(withManyDots)
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/..a a./../../..a a../......./.a/a./a", path.Path())
@@ -79,19 +79,19 @@ func TestManyDots(t *testing.T) {
 }
 
 func TestNormRootOnly(t *testing.T) {
-	path := pathUtils.NewNormPath("///////")
+	path := utils.NewNormPath("///////")
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/", path.Path())
 	assert.Equal(t, 0, len(path.Parts()))
 
-	path = pathUtils.NewNormPath("/")
+	path = utils.NewNormPath("/")
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/", path.Path())
 	assert.Equal(t, 0, len(path.Parts()))
 
-	path = pathUtils.NewNormPath("/.")
+	path = utils.NewNormPath("/.")
 	assert.NotNil(t, path)
 	assert.True(t, path.IsAbs())
 	assert.Equal(t, "/", path.Path())

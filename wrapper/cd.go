@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/elusivejoe/pudgitive/pathUtils"
+	"github.com/elusivejoe/pudgitive/utils"
 )
 
 func (w *Wrapper) Cd(path string) error {
-	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
+	navPath, err := utils.NewNavPath(resolveAbsolute(w, utils.NewNormPath(path)))
 
 	if err != nil {
 		return err

@@ -3,12 +3,12 @@ package wrapper
 import (
 	"strings"
 
-	"github.com/elusivejoe/pudgitive/pathUtils"
+	"github.com/elusivejoe/pudgitive/utils"
 )
 
-func resolveAbsolute(w *Wrapper, path *pathUtils.NormPath) *pathUtils.NormPath {
+func resolveAbsolute(w *Wrapper, path *utils.NormPath) *utils.NormPath {
 	if !path.IsAbs() && len(w.pwd) > 0 {
-		return pathUtils.NewNormPath("/" + w.pwd + "/" + path.Path())
+		return utils.NewNormPath("/" + w.pwd + "/" + path.Path())
 	}
 
 	return path

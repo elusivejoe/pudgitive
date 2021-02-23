@@ -1,13 +1,13 @@
 package wrapper
 
 import (
-	"github.com/elusivejoe/pudgitive/pathUtils"
+	"github.com/elusivejoe/pudgitive/utils"
 
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
 func (w *Wrapper) MkDir(path string) ([]meta.Meta, error) {
-	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
+	navPath, err := utils.NewNavPath(resolveAbsolute(w, utils.NewNormPath(path)))
 
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (w *Wrapper) MkDir(path string) ([]meta.Meta, error) {
 	return metas, nil
 }
 
-func (w *Wrapper) mkDir(path *pathUtils.NormPath) ([]meta.Meta, error) {
+func (w *Wrapper) mkDir(path *utils.NormPath) ([]meta.Meta, error) {
 	currentPos := w.root
 
 	var metas []meta.Meta

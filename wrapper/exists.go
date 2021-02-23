@@ -1,15 +1,15 @@
 package wrapper
 
-import "github.com/elusivejoe/pudgitive/pathUtils"
+import "github.com/elusivejoe/pudgitive/utils"
 
 func (w *Wrapper) Exists(path string) (bool, error) {
-	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, pathUtils.NewNormPath(path)))
+	navPath, err := utils.NewNavPath(resolveAbsolute(w, utils.NewNormPath(path)))
 
 	if err != nil {
 		return false, err
 	}
 
-	endpoint := pathUtils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
+	endpoint := utils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
 
 	ok, err := w.db.Has(endpoint)
 

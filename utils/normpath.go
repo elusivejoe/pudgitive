@@ -1,4 +1,4 @@
-package pathUtils
+package utils
 
 import (
 	"strings"

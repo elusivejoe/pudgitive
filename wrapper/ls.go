@@ -3,20 +3,20 @@ package wrapper
 import (
 	"strings"
 
-	"github.com/elusivejoe/pudgitive/pathUtils"
+	"github.com/elusivejoe/pudgitive/utils"
 
 	"github.com/elusivejoe/pudgitive/meta"
 )
 
 func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, error) {
-	normPath := pathUtils.NewNormPath(path)
-	navPath, err := pathUtils.NewNavPath(resolveAbsolute(w, normPath))
+	normPath := utils.NewNormPath(path)
+	navPath, err := utils.NewNavPath(resolveAbsolute(w, normPath))
 
 	if err != nil {
 		return nil, err
 	}
 
-	endpoint := pathUtils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
+	endpoint := utils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
 
 	prefixedKeys, err := w.db.KeysByPrefix([]byte(endpoint), 0, 0, asc)
 
