@@ -29,8 +29,8 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, err
 
 	currentOffset := 0
 
-	for _, prefix := range prefixedKeys {
-		subPath := utils.TrimPosition(w.root, w.pwd, string(prefix), normPath.IsAbs())
+	for _, key := range prefixedKeys {
+		subPath := utils.TrimDbKey(w.root, w.pwd, string(key), normPath.IsAbs())
 
 		if isRootElem := len(subPath) == 0; isRootElem {
 			continue
