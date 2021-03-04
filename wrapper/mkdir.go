@@ -7,7 +7,7 @@ import (
 )
 
 func (w *Wrapper) MkDir(path string) ([]meta.Meta, error) {
-	navPath, err := utils.NewNavPath(resolveAbsolute(w.pwd, utils.NewNormPath(path)))
+	navPath, err := utils.NewNavPath(utils.ResolveAbsolute(w.pwd, utils.NewNormPath(path)))
 
 	if err != nil {
 		return nil, err

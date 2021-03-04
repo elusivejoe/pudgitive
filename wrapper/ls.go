@@ -10,7 +10,7 @@ import (
 
 func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, error) {
 	normPath := utils.NewNormPath(path)
-	navPath, err := utils.NewNavPath(resolveAbsolute(w.pwd, normPath))
+	navPath, err := utils.NewNavPath(utils.ResolveAbsolute(w.pwd, normPath))
 
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, err
 	currentOffset := 0
 
 	for _, prefix := range prefixedKeys {
-		subPath := trimPosition(w.root, w.pwd, string(prefix), normPath.IsAbs())
+		subPath := utils.TrimPosition(w.root, w.pwd, string(prefix), normPath.IsAbs())
 
 		if isRootElem := len(subPath) == 0; isRootElem {
 			continue

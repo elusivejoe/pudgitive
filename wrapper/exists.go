@@ -3,7 +3,7 @@ package wrapper
 import "github.com/elusivejoe/pudgitive/utils"
 
 func (w *Wrapper) Exists(path string) (bool, error) {
-	navPath, err := utils.NewNavPath(resolveAbsolute(w.pwd, utils.NewNormPath(path)))
+	navPath, err := utils.NewNavPath(utils.ResolveAbsolute(w.pwd, utils.NewNormPath(path)))
 
 	if err != nil {
 		return false, err
