@@ -8,7 +8,7 @@ import (
 )
 
 func (w *Wrapper) Cd(path string) error {
-	navPath, err := utils.NewNavPath(resolveAbsolute(w, utils.NewNormPath(path)))
+	navPath, err := utils.NewNavPath(resolveAbsolute(w.pwd, utils.NewNormPath(path)))
 
 	if err != nil {
 		return err
