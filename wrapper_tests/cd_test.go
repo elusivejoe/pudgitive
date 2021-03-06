@@ -3,14 +3,13 @@ package wrapper_tests
 import (
 	"testing"
 
+	"github.com/elusivejoe/pudgitive/testutils"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCd(t *testing.T) {
-	wrapper := createWrapper(t)
-
-	assert.Nil(t, wrapper.InitRoot("test_cd"))
-	assert.Nil(t, wrapper.OpenRoot("test_cd"))
+	wrapper, _ := testutils.NewWrapper(t)
 
 	wrapper.MkDir("/dir_1")
 	wrapper.MkDir("/dir_2")

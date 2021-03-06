@@ -3,14 +3,13 @@ package wrapper_tests
 import (
 	"testing"
 
+	"github.com/elusivejoe/pudgitive/testutils"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestLsAbs(t *testing.T) {
-	wrapper := createWrapper(t)
-
-	assert.Nil(t, wrapper.InitRoot("test_ls"))
-	assert.Nil(t, wrapper.OpenRoot("test_ls"))
+	wrapper, _ := testutils.NewWrapper(t)
 
 	wrapper.MkDir("/dir_1")
 	wrapper.MkDir("/dir_2")
@@ -57,10 +56,7 @@ func TestLsAbs(t *testing.T) {
 }
 
 func TestLsDesc(t *testing.T) {
-	wrapper := createWrapper(t)
-
-	assert.Nil(t, wrapper.InitRoot("test_ls"))
-	assert.Nil(t, wrapper.OpenRoot("test_ls"))
+	wrapper, _ := testutils.NewWrapper(t)
 
 	wrapper.MkDir("/dir_1")
 	wrapper.MkDir("/dir_2")
@@ -87,10 +83,7 @@ func TestLsDesc(t *testing.T) {
 }
 
 func TestLsOffsLimAsc(t *testing.T) {
-	wrapper := createWrapper(t)
-
-	assert.Nil(t, wrapper.InitRoot("test_ls"))
-	assert.Nil(t, wrapper.OpenRoot("test_ls"))
+	wrapper, _ := testutils.NewWrapper(t)
 
 	wrapper.MkDir("/dir_1")
 	wrapper.MkDir("/dir_2")
@@ -111,10 +104,7 @@ func TestLsOffsLimAsc(t *testing.T) {
 }
 
 func TestLsOffsLimDesc(t *testing.T) {
-	wrapper := createWrapper(t)
-
-	assert.Nil(t, wrapper.InitRoot("test_ls"))
-	assert.Nil(t, wrapper.OpenRoot("test_ls"))
+	wrapper, _ := testutils.NewWrapper(t)
 
 	wrapper.MkDir("/dir_1")
 	wrapper.MkDir("/dir_2")

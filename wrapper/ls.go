@@ -25,7 +25,6 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, err
 	}
 
 	var metas []meta.Meta
-	metaInfo := &meta.Meta{}
 
 	currentOffset := 0
 
@@ -47,11 +46,11 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, err
 
 		key := endpoint + subPath
 
-		if err := w.db.Get(key, metaInfo); err != nil {
+		if metaInfo, err := utils.ReadMeta(w.db, key); err != nil {
 			return metas, err
+		} else {
+			metas = append(metas, metaInfo)
 		}
-
-		metas = append(metas, *metaInfo)
 
 		if limit > 0 && len(metas) == limit {
 			break

@@ -3,11 +3,13 @@ package wrapper_tests
 import (
 	"testing"
 
+	"github.com/elusivejoe/pudgitive/testutils"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAdmin(t *testing.T) {
-	wrapper := createWrapper(t)
+	wrapper, _ := testutils.NewWrapper(t)
 
 	err := wrapper.InitRoot("")
 	assert.EqualError(t, err, "root name cannot be empty")
@@ -16,11 +18,11 @@ func TestAdmin(t *testing.T) {
 
 	err = wrapper.InitRoot(rootName)
 	assert.Nil(t, err)
-	assert.Equal(t, wrapper.CurrentRoot(), "")
+	assert.Equal(t, "test_root", wrapper.CurrentRoot())
 
 	err = wrapper.InitRoot("Another Root")
 	assert.Nil(t, err)
-	assert.Equal(t, wrapper.CurrentRoot(), "")
+	assert.Equal(t, "test_root", wrapper.CurrentRoot())
 
 	err = wrapper.InitRoot(rootName)
 
@@ -28,17 +30,17 @@ func TestAdmin(t *testing.T) {
 
 	err = wrapper.OpenRoot(rootName)
 	assert.Nil(t, err)
-	assert.Equal(t, wrapper.CurrentRoot(), rootName)
+	assert.Equal(t, rootName, wrapper.CurrentRoot())
 
 	err = wrapper.DeleteRoot("Some Other Root")
 	assert.EqualError(t, err, "unable to find root 'Some Other Root'")
-	assert.Equal(t, wrapper.CurrentRoot(), rootName)
+	assert.Equal(t, rootName, wrapper.CurrentRoot())
 
 	err = wrapper.DeleteRoot("Another Root")
 	assert.Nil(t, err)
-	assert.Equal(t, wrapper.CurrentRoot(), rootName)
+	assert.Equal(t, rootName, wrapper.CurrentRoot())
 
 	err = wrapper.DeleteRoot(rootName)
 	assert.Nil(t, err)
-	assert.Equal(t, wrapper.CurrentRoot(), "")
+	assert.Equal(t, "", wrapper.CurrentRoot())
 }

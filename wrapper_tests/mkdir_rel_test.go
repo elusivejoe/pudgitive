@@ -3,14 +3,13 @@ package wrapper_tests
 import (
 	"testing"
 
+	"github.com/elusivejoe/pudgitive/testutils"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMkDirRel(t *testing.T) {
-	wrapper := createWrapper(t)
-
-	assert.Nil(t, wrapper.InitRoot("test_mkdir"))
-	assert.Nil(t, wrapper.OpenRoot("test_mkdir"))
+	wrapper, _ := testutils.NewWrapper(t)
 
 	ok, err := wrapper.Exists("test dir")
 	assert.Nil(t, err)
@@ -42,10 +41,7 @@ func TestMkDirRel(t *testing.T) {
 }
 
 func TestMkDirRelDots(t *testing.T) {
-	wrapper := createWrapper(t)
-
-	assert.Nil(t, wrapper.InitRoot("test_mkdir"))
-	assert.Nil(t, wrapper.OpenRoot("test_mkdir"))
+	wrapper, _ := testutils.NewWrapper(t)
 
 	metas, err := wrapper.MkDir("test dir/another dir")
 	assert.Nil(t, err)

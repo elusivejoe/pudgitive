@@ -1,4 +1,4 @@
 # pudgitive
 
-pudgitive is a wrapper for [pudge](https://github.com/recoilme/pudge) which
-provides hierarchical tree-like database structure.
+pudgitive is a wrapper for [pudge](https://github.com/recoilme/pudge) that
+emulates a simplified filesystem with a minimal set of commands.
