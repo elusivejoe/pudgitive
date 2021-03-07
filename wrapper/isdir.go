@@ -21,5 +21,5 @@ func (w *Wrapper) IsDir(path string) (bool, error) {
 		return false, err
 	}
 
-	return metaInfo.Attrs.IsDir, nil
+	return metaInfo.IsDir, nil
 }

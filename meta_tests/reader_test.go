@@ -23,6 +23,6 @@ func TestReadMeta(t *testing.T) {
 	wrapper.MkDir("/a/b/cd/ef/the dir/another dir")
 	metaInfo, err = meta.ReadMeta(db, "read_meta/a/b/cd/ef/the dir")
 	assert.Nil(t, err)
-	assert.True(t, metaInfo.Attrs.IsDir)
+	assert.True(t, metaInfo.IsDir)
 	assert.Equal(t, "the dir", metaInfo.Name)
 }

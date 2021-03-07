@@ -22,7 +22,7 @@ func TestMkDirRel(t *testing.T) {
 	metas, err := wrapper.MkDir("test dir")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(metas))
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 	assert.Equal(t, "test dir", metas[0].Name)
 
 	ok, err = wrapper.Exists("test dir")
@@ -32,7 +32,7 @@ func TestMkDirRel(t *testing.T) {
 	metas, err = wrapper.MkDir("test dir 2")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(metas))
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 	assert.Equal(t, "test dir 2", metas[0].Name)
 
 	ok, err = wrapper.Exists("test dir 2")
@@ -46,8 +46,8 @@ func TestMkDirRelDots(t *testing.T) {
 	metas, err := wrapper.MkDir("test dir/another dir")
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(metas))
-	assert.True(t, metas[0].Attrs.IsDir)
-	assert.True(t, metas[1].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
+	assert.True(t, metas[1].IsDir)
 	assert.Equal(t, "test dir", metas[0].Name)
 	assert.Equal(t, "another dir", metas[1].Name)
 
@@ -59,7 +59,7 @@ func TestMkDirRelDots(t *testing.T) {
 	assert.NotNil(t, metas)
 
 	for _, meta := range metas {
-		assert.True(t, meta.Attrs.IsDir)
+		assert.True(t, meta.IsDir)
 	}
 
 	assert.Equal(t, "a", metas[0].Name)

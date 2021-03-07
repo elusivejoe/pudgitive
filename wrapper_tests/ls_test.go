@@ -43,16 +43,16 @@ func TestLsAbs(t *testing.T) {
 	assert.Equal(t, 4, len(metas))
 
 	assert.Equal(t, "dir_1", metas[0].Name)
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 
 	assert.Equal(t, "dir_2", metas[1].Name)
-	assert.True(t, metas[1].Attrs.IsDir)
+	assert.True(t, metas[1].IsDir)
 
 	assert.Equal(t, "dir_3", metas[2].Name)
-	assert.True(t, metas[2].Attrs.IsDir)
+	assert.True(t, metas[2].IsDir)
 
 	assert.Equal(t, "dir_4", metas[3].Name)
-	assert.True(t, metas[3].Attrs.IsDir)
+	assert.True(t, metas[3].IsDir)
 }
 
 func TestLsDesc(t *testing.T) {
@@ -70,16 +70,16 @@ func TestLsDesc(t *testing.T) {
 	assert.Equal(t, 4, len(metas))
 
 	assert.Equal(t, "dir_4", metas[0].Name)
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 
 	assert.Equal(t, "dir_3", metas[1].Name)
-	assert.True(t, metas[1].Attrs.IsDir)
+	assert.True(t, metas[1].IsDir)
 
 	assert.Equal(t, "dir_2", metas[2].Name)
-	assert.True(t, metas[2].Attrs.IsDir)
+	assert.True(t, metas[2].IsDir)
 
 	assert.Equal(t, "dir_1", metas[3].Name)
-	assert.True(t, metas[3].Attrs.IsDir)
+	assert.True(t, metas[3].IsDir)
 }
 
 func TestLsOffsLimAsc(t *testing.T) {
@@ -97,10 +97,10 @@ func TestLsOffsLimAsc(t *testing.T) {
 	assert.Equal(t, 2, len(metas))
 
 	assert.Equal(t, "dir_3", metas[0].Name)
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 
 	assert.Equal(t, "dir_4", metas[1].Name)
-	assert.True(t, metas[1].Attrs.IsDir)
+	assert.True(t, metas[1].IsDir)
 }
 
 func TestLsOffsLimDesc(t *testing.T) {
@@ -118,8 +118,8 @@ func TestLsOffsLimDesc(t *testing.T) {
 	assert.Equal(t, 2, len(metas))
 
 	assert.Equal(t, "dir_2", metas[0].Name)
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 
 	assert.Equal(t, "dir_1", metas[1].Name)
-	assert.True(t, metas[1].Attrs.IsDir)
+	assert.True(t, metas[1].IsDir)
 }

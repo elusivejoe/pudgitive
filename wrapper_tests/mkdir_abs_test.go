@@ -32,7 +32,7 @@ func TestMkDirAbs(t *testing.T) {
 	assert.Equal(t, 3, len(metas))
 
 	for _, meta := range metas {
-		assert.True(t, meta.Attrs.IsDir)
+		assert.True(t, meta.IsDir)
 	}
 
 	assert.Equal(t, "dir_1", metas[0].Name)
@@ -42,7 +42,7 @@ func TestMkDirAbs(t *testing.T) {
 	metas, err = wrapper.MkDir("/dir_1/dir_2/dir_4")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(metas))
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 	assert.Equal(t, "dir_4", metas[0].Name)
 
 	ok, err = wrapper.Exists("/dir_1")
@@ -85,19 +85,19 @@ func TestMkDirAbsDots(t *testing.T) {
 	assert.Nil(t, err)
 	assert.False(t, ok)
 
-	meats, err := wrapper.MkDir("/a/b/c/../d/e")
+	metas, err := wrapper.MkDir("/a/b/c/../d/e")
 	assert.Nil(t, err)
-	assert.NotNil(t, meats)
+	assert.NotNil(t, metas)
 
-	for _, meta := range meats {
-		assert.True(t, meta.Attrs.IsDir)
+	for _, meta := range metas {
+		assert.True(t, meta.IsDir)
 	}
 
-	assert.Equal(t, "a", meats[0].Name)
-	assert.Equal(t, "b", meats[1].Name)
-	assert.Equal(t, "c", meats[2].Name)
-	assert.Equal(t, "d", meats[3].Name)
-	assert.Equal(t, "e", meats[4].Name)
+	assert.Equal(t, "a", metas[0].Name)
+	assert.Equal(t, "b", metas[1].Name)
+	assert.Equal(t, "c", metas[2].Name)
+	assert.Equal(t, "d", metas[3].Name)
+	assert.Equal(t, "e", metas[4].Name)
 
 	ok, err = wrapper.Exists("a")
 	assert.Nil(t, err)

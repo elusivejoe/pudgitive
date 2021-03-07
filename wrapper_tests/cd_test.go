@@ -23,13 +23,13 @@ func TestCd(t *testing.T) {
 	assert.Equal(t, 3, len(metas))
 
 	assert.Equal(t, "dir_1", metas[0].Name)
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 
 	assert.Equal(t, "dir_2", metas[1].Name)
-	assert.True(t, metas[1].Attrs.IsDir)
+	assert.True(t, metas[1].IsDir)
 
 	assert.Equal(t, "dir_3", metas[2].Name)
-	assert.True(t, metas[2].Attrs.IsDir)
+	assert.True(t, metas[2].IsDir)
 
 	err = wrapper.Cd("dir_1")
 	assert.Nil(t, err)
@@ -52,11 +52,11 @@ func TestCd(t *testing.T) {
 	assert.Equal(t, 3, len(metas))
 
 	assert.Equal(t, "dir_1", metas[0].Name)
-	assert.True(t, metas[0].Attrs.IsDir)
+	assert.True(t, metas[0].IsDir)
 
 	assert.Equal(t, "dir_2", metas[1].Name)
-	assert.True(t, metas[1].Attrs.IsDir)
+	assert.True(t, metas[1].IsDir)
 
 	assert.Equal(t, "dir_3", metas[2].Name)
-	assert.True(t, metas[2].Attrs.IsDir)
+	assert.True(t, metas[2].IsDir)
 }
