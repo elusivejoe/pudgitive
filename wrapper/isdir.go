@@ -1,10 +1,13 @@
 package wrapper
 
-import "github.com/elusivejoe/pudgitive/utils"
+import (
+	"github.com/elusivejoe/pudgitive/meta"
+	"github.com/elusivejoe/pudgitive/utils"
+)
 
 func (w *Wrapper) IsDir(path string) (bool, error) {
-	normPath := utils.NewNormPath(path)
-	navPath, err := utils.NewNavPath(utils.ResolveAbsolute(w.pwd, normPath))
+	normAbs := utils.ResolveAbsolute(w.pwd, utils.NewNormPath(path))
+	navPath, err := utils.NewNavPath(utils.ResolveAbsolute(w.pwd, normAbs))
 
 	if err != nil {
 		return false, err
@@ -12,7 +15,7 @@ func (w *Wrapper) IsDir(path string) (bool, error) {
 
 	endpoint := utils.NewNormPath(w.root + "/" + navPath.FinalDest().Path()).Path()
 
-	metaInfo, err := utils.ReadMeta(w.db, endpoint)
+	metaInfo, err := meta.ReadMeta(w.db, endpoint)
 
 	if err != nil {
 		return false, err

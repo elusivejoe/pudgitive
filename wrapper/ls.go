@@ -46,7 +46,7 @@ func (w *Wrapper) Ls(path string, limit, offset int, asc bool) ([]meta.Meta, err
 
 		key := endpoint + subPath
 
-		if metaInfo, err := utils.ReadMeta(w.db, key); err != nil {
+		if metaInfo, err := meta.ReadMeta(w.db, key); err != nil {
 			return metas, err
 		} else {
 			metas = append(metas, metaInfo)
