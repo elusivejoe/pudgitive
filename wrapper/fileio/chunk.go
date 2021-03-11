@@ -1,6 +1,6 @@
 package fileio
 
 type Chunk struct {
-	payload   []byte
-	nextChunk string
+	Payload []byte
+	HasNext bool
 }
