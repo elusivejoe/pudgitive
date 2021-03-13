@@ -11,42 +11,33 @@ type Reader struct {
 	eof         bool
 	fileId      int
 	chunkId     int
+	chunk       *Chunk
 	chunkOffset int
 }
 
 func NewReader(db *pudge.Db, fileId int) (*Reader, error) {
-	return &Reader{db: db, fileId: fileId}, nil
+	return &Reader{db: db, fileId: fileId, chunk: &Chunk{}}, nil
 }
 
 func (r *Reader) Read(p []byte) (n int, err error) {
-	outCap := cap(p)
+	for !r.eof && n < len(p) {
+		if r.chunkOffset == len(r.chunk.Payload) {
+			*r.chunk = Chunk{}
+			curChunkId := fmt.Sprintf("%d:%d", r.fileId, r.chunkId)
 
-	if outCap == 0 || r.eof {
-		return 0, nil
-	}
+			if err := r.db.Get(curChunkId, r.chunk); err != nil {
+				return n, err
+			}
 
-	chunk := &Chunk{}
-
-	for requestNextChunk := true; requestNextChunk; {
-		curChunkId := fmt.Sprintf("%d:%d", r.fileId, r.chunkId)
-
-		if err := r.db.Get(curChunkId, chunk); err != nil {
-			return n, err
-		}
-
-		copied := copy(p[n:], chunk.Payload[r.chunkOffset:])
-		n += copied
-		requestNextChunk = chunk.HasNext && n < outCap
-
-		if requestNextChunk {
 			r.chunkId++
 			r.chunkOffset = 0
-			chunk.HasNext = false
-		} else {
-			r.chunkOffset += copied
 		}
 
-		r.eof = !chunk.HasNext && r.chunkOffset == len(chunk.Payload)
+		copied := copy(p[n:], r.chunk.Payload[r.chunkOffset:])
+		n += copied
+
+		r.chunkOffset += copied
+		r.eof = !r.chunk.HasNext && r.chunkOffset == len(r.chunk.Payload)
 	}
 
 	return n, nil

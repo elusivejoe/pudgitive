@@ -8,38 +8,34 @@ import (
 )
 
 type Writer struct {
-	db           *pudge.Db
-	chunkSize    int
-	fileId       int
-	chunkId      int
-	currentChunk *Chunk
+	db        *pudge.Db
+	chunkSize int
+	fileId    int
+	chunkId   int
+	chunk     *Chunk
 }
 
 func NewWriter(db *pudge.Db, fileId, chunkSize int) (*Writer, error) {
-	return &Writer{db: db, fileId: fileId, chunkSize: chunkSize}, nil
+	return &Writer{db: db, fileId: fileId, chunkSize: chunkSize, chunk: &Chunk{}}, nil
 }
 
 func (w *Writer) Write(p []byte) (n int, err error) {
-	if w.currentChunk == nil {
-		w.currentChunk = &Chunk{Payload: nil, HasNext: false}
-	}
-
 	for len(p) > 0 {
-		curChunkCap := w.chunkSize - len(w.currentChunk.Payload)
-		copied := int(math.Min(float64(len(p)), float64(curChunkCap)))
+		chunkCap := w.chunkSize - len(w.chunk.Payload)
+		copied := int(math.Min(float64(len(p)), float64(chunkCap)))
 
-		w.currentChunk.Payload = append(w.currentChunk.Payload, p[:copied]...)
+		w.chunk.Payload = append(w.chunk.Payload, p[:copied]...)
 		p = p[copied:]
-		w.currentChunk.HasNext = len(p) > 0
+		w.chunk.HasNext = len(p) > 0
 
-		curChunkId := fmt.Sprintf("%d:%d", w.fileId, w.chunkId)
+		chunkId := fmt.Sprintf("%d:%d", w.fileId, w.chunkId)
 
-		if err := w.db.Set(curChunkId, w.currentChunk); err != nil {
+		if err := w.db.Set(chunkId, w.chunk); err != nil {
 			return n, err
 		}
 
-		if w.currentChunk.HasNext {
-			w.currentChunk = &Chunk{Payload: nil, HasNext: false}
+		if w.chunk.HasNext {
+			*w.chunk = Chunk{}
 			w.chunkId++
 		}
 
