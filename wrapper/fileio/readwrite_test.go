@@ -76,3 +76,47 @@ func TestReadParts(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 0, n)
 }
+
+func TestReadAligned(t *testing.T) {
+	_, db := testutils.NewWrapper(t)
+
+	writer, _ := NewWriter(db, 0, 5)
+	writer.Write([]byte("test "))
+	writer.Write([]byte("str"))
+	writer.Write([]byte("in"))
+	writer.Write([]byte("g abc"))
+
+	reader, err := NewReader(db, 0)
+	assert.Nil(t, err)
+	assert.NotNil(t, reader)
+
+	out := make([]byte, 5)
+	n, err := reader.Read(out)
+	assert.Nil(t, err)
+	assert.Equal(t, 5, n)
+	assert.Equal(t, "test ", string(out[:n]))
+
+	out = make([]byte, 3)
+	n, err = reader.Read(out)
+	assert.Nil(t, err)
+	assert.Equal(t, 3, n)
+	assert.Equal(t, "str", string(out[:n]))
+
+	out = make([]byte, 2)
+	n, err = reader.Read(out)
+	assert.Nil(t, err)
+	assert.Equal(t, 2, n)
+	assert.Equal(t, "in", string(out[:n]))
+
+	out = make([]byte, 5)
+	n, err = reader.Read(out)
+	assert.Nil(t, err)
+	assert.Equal(t, 5, n)
+	assert.Equal(t, "g abc", string(out[:n]))
+	assert.True(t, reader.Eof())
+
+	out = make([]byte, 10)
+	n, err = reader.Read(out)
+	assert.Nil(t, err)
+	assert.Equal(t, 0, n)
+}
