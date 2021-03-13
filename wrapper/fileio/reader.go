@@ -23,9 +23,9 @@ func (r *Reader) Read(p []byte) (n int, err error) {
 	for !r.eof && n < len(p) {
 		if r.chunkOffset == len(r.chunk.Payload) {
 			*r.chunk = Chunk{}
-			curChunkId := fmt.Sprintf("%d:%d", r.fileId, r.chunkId)
+			chunkId := fmt.Sprintf("%d:%d", r.fileId, r.chunkId)
 
-			if err := r.db.Get(curChunkId, r.chunk); err != nil {
+			if err := r.db.Get(chunkId, r.chunk); err != nil {
 				return n, err
 			}
 
