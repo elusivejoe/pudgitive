@@ -24,7 +24,7 @@ func TestIsDir(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, ok)
 
-	wrapper.Cd("/a/b/c")
+	assert.Nil(t, wrapper.Cd("/a/b/c"))
 
 	ok, err = wrapper.IsDir("d")
 	assert.Nil(t, err)

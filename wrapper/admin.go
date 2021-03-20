@@ -26,9 +26,7 @@ func (w *Wrapper) InitRoot(rootName string) error {
 		return fmt.Errorf("root '%s' already exists", rootName)
 	}
 
-	w.db.Set(rootName, meta.RootMeta{Name: rootName, Magic: "pudgitive"})
-
-	return nil
+	return w.db.Set(rootName, meta.RootMeta{Name: rootName, Magic: "pudgitive"})
 }
 
 func (w *Wrapper) verifyRoot(rootName string) error {
@@ -43,7 +41,11 @@ func (w *Wrapper) verifyRoot(rootName string) error {
 	}
 
 	root := meta.RootMeta{}
-	w.db.Get(rootName, &root)
+	err = w.db.Get(rootName, &root)
+
+	if err != nil {
+		return err
+	}
 
 	if root.Magic != "pudgitive" || root.Name != rootName {
 		return fmt.Errorf("broken root '%s' %v", rootName, root)
@@ -71,7 +73,5 @@ func (w *Wrapper) DeleteRoot(key string) error {
 		w.root = ""
 	}
 
-	w.db.Delete(key)
-
-	return nil
+	return w.db.Delete(key)
 }

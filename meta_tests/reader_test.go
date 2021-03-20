@@ -13,14 +13,15 @@ import (
 func TestReadMeta(t *testing.T) {
 	wrapper, db := testutils.NewWrapper(t)
 
-	wrapper.InitRoot("read_meta")
-	wrapper.OpenRoot("read_meta")
+	assert.Nil(t, wrapper.InitRoot("read_meta"))
+	assert.Nil(t, wrapper.OpenRoot("read_meta"))
 
 	metaInfo, err := meta.ReadMeta(db, "abc")
 	assert.NotNil(t, err)
 	assert.Empty(t, metaInfo)
 
-	wrapper.MkDir("/a/b/cd/ef/the dir/another dir")
+	_, err = wrapper.MkDir("/a/b/cd/ef/the dir/another dir")
+	assert.Nil(t, err)
 	metaInfo, err = meta.ReadMeta(db, "read_meta/a/b/cd/ef/the dir")
 	assert.Nil(t, err)
 	assert.True(t, metaInfo.IsDir)

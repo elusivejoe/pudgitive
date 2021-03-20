@@ -17,10 +17,7 @@ func (w *Wrapper) MkDir(path string) ([]meta.Meta, error) {
 
 	for _, path := range navPath.DestList() {
 		subMetas, err := w.mkDir(path)
-
-		for _, meta := range subMetas {
-			metas = append(metas, meta)
-		}
+		metas = append(metas, subMetas...)
 
 		if err != nil {
 			return metas, err
